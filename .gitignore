@@ -3,18 +3,23 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 
+# credentials / secrets
+.env
+*.json
+profiles.yml
+.kaggle/
+.cache/
+
+# data
 data/raw/
 data/interim/
 data/processed/
 
-.env
-*.json
-.kaggle/
-.cache/
+# dbt generated artifacts
+superstore/target/
+superstore/dbt_packages/
+superstore/logs/
+superstore/.user.yml
 
-dbt/**/target/
-dbt/**/dbt_packages/
-dbt/**/logs/
-dbt/**/.user.yml
-
-reports/figures/*.html
+# logs
+logs/

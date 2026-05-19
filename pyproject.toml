@@ -3,6 +3,8 @@ name = "3a-superstore-analysis"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "dbt-bigquery>=1.11.1",
+    "dbt-core>=1.11.10",
     "duckdb>=1.5.2",
     "ipykernel>=7.2.0",
     "jupyterlab>=4.5.7",
