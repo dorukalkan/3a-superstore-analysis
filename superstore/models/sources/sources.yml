@@ -2,17 +2,21 @@ version: 2
 
 sources:
   - name: raw
-    database: superstore-analysis
+    database: superstore-analysis-496710
     schema: raw
-    description: "Raw 3A Superstore Kaggle tables ingested into BigQuery."
+    description: "Raw 3A Superstore tables ingested into BigQuery."
     tables:
       - name: orders
         description: "Raw order header table."
+
       - name: order_details
-        description: "Raw order line/detail table."
+        description: "Raw order detail table."
+
       - name: customers
         description: "Raw customer table."
+
       - name: branches
-        description: "Raw branch/store table."
+        description: "Raw branch table."
+
       - name: categories
         description: "Raw category table."
