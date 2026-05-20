@@ -5,7 +5,9 @@ select
     ITEMCODE as item_code,
 
     cast(AMOUNT as int64) as amount,
-    cast(UNITPRICE as numeric) as unit_price,
-    cast(TOTALPRICE as numeric) as total_price
+
+    SAFE_CAST(REPLACE(UNITPRICE, ',', '.') AS FLOAT64) as unit_price,
+
+    SAFE_CAST(REPLACE(TOTALPRICE, ',', '.') AS FLOAT64) as total_price
 
 from {{ source('raw', 'order_details') }}
