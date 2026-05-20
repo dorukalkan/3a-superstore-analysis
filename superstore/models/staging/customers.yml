@@ -1,0 +1,45 @@
+version: 2
+sources:
+  - name: raw
+    database: superstore-analysis-496710
+    schema: raw
+    description: "Raw 3A Superstore tables ingested into BigQuery."
+    tables:
+
+      - name: customers
+        description: "Raw customer table."
+        columns:
+         - name: user_id
+           tests:
+              - not_null
+              - unique              
+         - name: email
+           tests:
+              - not_null  
+         - name: full_name 
+           tests:
+              - not_null  
+         - name: status 
+           tests:
+              - not_null  
+         - name: gender
+           tests:
+              - not_null  
+         - name: birth_date
+           tests:
+              - not_null  
+         - name: region
+           tests:
+              - not_null  
+         - name: city 
+           tests:
+              - not_null  
+         - name: town
+           tests:
+              - not_null  
+         - name: district 
+           tests:
+              - not_null  
+         - name: address       
+           tests:
+              - not_null              
