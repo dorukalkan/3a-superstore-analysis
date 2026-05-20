@@ -1,5 +1,4 @@
 version: 2
-
 sources:
   - name: raw
     database: superstore-analysis-496710
@@ -8,15 +7,11 @@ sources:
     tables:
       - name: orders
         description: "Raw order header table."
-
       - name: order_details
         description: "Raw order detail table."
-
       - name: customers
         description: "Raw customer table."
-
-      - name: branches
+      - name: branch
         description: "Raw branch table."
-
       - name: categories
         description: "Raw category table."
