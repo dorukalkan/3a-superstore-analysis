@@ -1,3 +1,7 @@
+with source as (
+    select * from {{ source('raw', 'branch') }}
+),
+cleaned as (
 select
 
     BRANCH_ID as branch_id,
@@ -9,4 +13,6 @@ select
     round(cast(LAT as numeric) / 100000000,6) as latitude,
     round(cast(LON as numeric) / 100000000,6) as longitude
 
-from {{ source('raw', 'branch') }}
+from source
+)
+select * from cleaned 
