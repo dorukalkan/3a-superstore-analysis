@@ -1,14 +1,9 @@
 version: 2
-sources:
-  - name: raw
-    database: superstore-analysis-496710
-    schema: raw
-    description: "Raw 3A Superstore tables ingested into BigQuery."
-    tables:
+models:
 
-      - name: categories
-        description: "Raw category table."
-        columns:
+  - name: stg_raw_categories
+    description: "Cleaned categories staging table"
+    columns:
          - name: itemid
            tests:
               - not_null
