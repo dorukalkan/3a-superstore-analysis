@@ -5,6 +5,7 @@ sources:
     database: superstore-analysis-496710
     schema: raw
     description: "Raw 3A Superstore tables ingested into BigQuery."
+
     tables:
       - name: orders
         description: "Raw order header table."
@@ -15,7 +16,7 @@ sources:
       - name: customers
         description: "Raw customer table."
 
-      - name: branches
+      - name: branch
         description: "Raw branch table."
 
       - name: categories
