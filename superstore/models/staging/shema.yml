@@ -1,0 +1,34 @@
+version: 2
+
+models:
+
+  - name: stg_order_details
+    description: "Cleaned order details staging table"
+
+    columns:
+
+      - name: order_detail_id
+        tests:
+          - unique
+          - not_null
+
+      - name: order_id
+        tests:
+          - not_null
+
+      - name: item_id
+        tests:
+          - not_null
+
+  - name: stg_branch
+    description: "Cleaned branch staging table"
+
+    columns:
+
+      - name: branch_id
+        tests:
+          - not_null
+
+      - name: city
+        tests:
+          - not_null
