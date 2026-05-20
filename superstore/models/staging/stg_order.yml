@@ -31,7 +31,7 @@ models:
       - name: customer_name
         description: "Customer name snapshot as stored in the raw orders table."
 
-      - name: total_basket_try
+      - name: total_basket
         description: "Nominal order basket value in Turkish lira, converted from Turkish decimal-comma string format."
         tests:
           - not_null
