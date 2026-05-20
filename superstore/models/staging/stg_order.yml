@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: "Cleaned staging model for raw supermarket order headers."
+    columns:
+      - name: order_id
+        description: "Unique order identifier."
+        tests:
+          - not_null
+          - unique
+
+      - name: branch_id
+        description: "Branch/store identifier where the order was placed."
+        tests:
+          - not_null
+
+      - name: customer_id
+        description: "Customer identifier."
+        tests:
+          - not_null
+
+      - name: order_datetime
+        description: "Order timestamp as DATETIME."
+
+      - name: order_date
+        description: "Order date extracted from the raw order datetime."
+        tests:
+          - not_null
+
+      - name: customer_name
+        description: "Customer name snapshot as stored in the raw orders table."
+
+      - name: total_basket
+        description: "Nominal order basket value in Turkish lira, converted from Turkish decimal-comma string format."
+        tests:
+          - not_null
