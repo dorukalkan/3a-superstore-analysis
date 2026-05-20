@@ -1,14 +1,9 @@
 version: 2
-sources:
-  - name: raw
-    database: superstore-analysis-496710
-    schema: raw
-    description: "Raw 3A Superstore tables ingested into BigQuery."
-    tables:
+models:
 
-      - name: customers
-        description: "Raw customer table."
-        columns:
+  - name: stg_raw_customers
+    description: "Cleaned customers staging table"
+    columns:
          - name: user_id
            tests:
               - not_null
