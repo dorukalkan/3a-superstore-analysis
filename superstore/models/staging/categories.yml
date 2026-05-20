@@ -1,0 +1,46 @@
+version: 2
+models:
+
+  - name: stg_raw_categories
+    description: "Cleaned categories staging table"
+    columns:
+         - name: itemid
+           tests:
+              - not_null
+              - unique                
+         - name: category1
+           tests:
+              - not_null           
+         - name: category1_id
+           tests:
+              - not_null  
+         - name: category2
+           tests:
+              - not_null  
+         - name: category2_id
+           tests:
+              - not_null  
+         - name: category3
+           tests:
+              - not_null  
+         - name: category3_id
+           tests:
+              - not_null  
+         - name: category4
+           tests:
+              - not_null  
+         - name: category4_id
+           tests:
+              - not_null  
+         - name: brand
+           tests:
+              - not_null  
+         - name: itemcode
+           tests:
+              - not_null
+              - unique
+         - name: itemname
+           tests:
+              - not_null               
+        
+ 
