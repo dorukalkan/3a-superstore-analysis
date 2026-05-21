@@ -1,0 +1,78 @@
+version: 2
+
+models:
+  - name: int_branch_dim
+    description: "One row per branch/store identifier, collapsed from branch coverage rows for safe joins to order facts."
+    columns:
+      - name: branch_id
+        description: "Branch/store identifier available on order facts."
+        tests:
+          - not_null
+          - unique
+
+      - name: region
+        description: "Geographic region of the branch."
+
+      - name: city
+        description: "City of the branch."
+
+      - name: branch_town
+        description: "Town where the branch/store is located."
+
+      - name: covered_town_count
+        description: "Number of towns covered by the branch in the raw branch coverage table."
+
+  - name: int_order_revenue
+    description: "Order-level revenue fact with line-item metrics and reconciliation fields."
+    columns:
+      - name: order_id
+        description: "Unique order identifier."
+        tests:
+          - not_null
+          - unique
+
+      - name: branch_id
+        description: "Branch/store identifier where the order was placed."
+        tests:
+          - not_null
+
+      - name: customer_id
+        description: "Customer identifier."
+        tests:
+          - not_null
+
+      - name: order_date
+        description: "Order date."
+        tests:
+          - not_null
+
+      - name: order_month
+        description: "First day of the order month, used as the future CPI join key."
+        tests:
+          - not_null
+
+      - name: order_year
+        description: "Calendar year of the order."
+
+      - name: order_quarter
+        description: "Calendar quarter of the order."
+
+      - name: nominal_order_revenue
+        description: "Nominal TRY order revenue from the order header."
+        tests:
+          - not_null
+
+      - name: line_nominal_revenue
+        description: "Nominal TRY order revenue summed from order lines."
+
+      - name: units_sold
+        description: "Total item units sold in the order."
+
+      - name: line_item_count
+        description: "Number of line items in the order."
+
+      - name: revenue_reconciliation_diff
+        description: "Difference between header revenue and summed line revenue."
+
+      - name: has_revenue_reconciliation_issue
+        description: "True when the absolute revenue reconciliation difference is greater than 0.01 TRY."

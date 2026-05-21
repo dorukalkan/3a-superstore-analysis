@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: fct_daily_branch_revenue
+    description: "Daily branch revenue fact for nominal TRY sales analysis, with CPI-ready month keys."
+    columns:
+      - name: daily_branch_revenue_key
+        description: "Composite key for order_date and branch_id."
+        tests:
+          - not_null
+          - unique
+
+      - name: order_date
+        description: "Revenue date."
+        tests:
+          - not_null
+
+      - name: order_month
+        description: "First day of the revenue month, used as the future CPI join key."
+        tests:
+          - not_null
+
+      - name: order_year
+        description: "Calendar year of the revenue date."
+
+      - name: order_quarter
+        description: "Calendar quarter of the revenue date."
+
+      - name: branch_id
+        description: "Branch/store identifier."
+        tests:
+          - not_null
+
+      - name: region
+        description: "Geographic region of the branch."
+
+      - name: city
+        description: "City of the branch."
+
+      - name: branch_town
+        description: "Town where the branch/store is located."
+
+      - name: covered_town_count
+        description: "Number of towns covered by the branch in the raw branch coverage table."
+
+      - name: order_count
+        description: "Number of orders on the date for the branch."
+        tests:
+          - not_null
+
+      - name: customer_count
+        description: "Number of distinct customers on the date for the branch."
+
+      - name: nominal_revenue
+        description: "Nominal TRY revenue from order headers."
+        tests:
+          - not_null
+
+      - name: line_nominal_revenue
+        description: "Nominal TRY revenue summed from order lines."
+
+      - name: units_sold
+        description: "Total item units sold."
+        tests:
+          - not_null
+
+      - name: line_item_count
+        description: "Total order line count."
+
+      - name: avg_order_value
+        description: "Nominal revenue divided by order count."
+
+      - name: units_per_order
+        description: "Units sold divided by order count."
+
+      - name: revenue_reconciliation_abs_diff
+        description: "Sum of absolute order-level differences between header and line revenue."
