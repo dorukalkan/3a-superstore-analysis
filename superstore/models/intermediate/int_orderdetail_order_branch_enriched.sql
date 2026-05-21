@@ -22,6 +22,14 @@ final as (
         -- order info
         sales_orders.order_id,
         sales_orders.order_date,
+        sales_orders.order_day_type,
+        sales_orders.order_year,
+        sales_orders.order_month,
+        sales_orders.order_quarter,
+        sales_orders.order_day_name,
+        sales_orders.order_year_month,
+        sum(total_price)over(partition by sales_orders.branch_id)as branch_total_revenue,
+        avg(safe_total_basket)over(partition by sales_orders.branch_id)as branch_avg_basket,
 
         -- branch info
         sales_orders.branch_id,
