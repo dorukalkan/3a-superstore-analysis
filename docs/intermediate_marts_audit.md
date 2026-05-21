@@ -2,6 +2,9 @@
 
 Audit tarihi: 2026-05-21
 
+Son tekrar kontrol: 2026-05-21, main branch'ten gelen son değişiklikler
+sonrası yeniden bakıldı.
+
 Kapsam:
 
 - `superstore/models/intermediate`
@@ -24,6 +27,20 @@ doğrudan `stg_branch` ile join ediyor. `stg_branch` branch grain'de değil;
 branch coverage grain'de. Bu yüzden order-detail satırları çoğalıyor. Bu
 modeller downstream'de kullanılırsa revenue, order count, item count ve basket
 metrikleri şişebilir.
+
+Main'den gelen son değişikliklerde bazı yeni alanlar eklenmiş:
+
+- `int_orderdetail_order_enriched` içine order tarih/grain yardımcı alanları ve
+  line share metrikleri eklenmiş.
+- `int_orderdetail_order_branch_enriched` içine branch window metrikleri
+  eklenmiş.
+- `int_orderdetail_order_customer_enriched` içine customer window metrikleri
+  eklenmiş.
+- `stg_raw_customers.birth_date` artık `DATE` olarak cast ediliyor; bu olumlu
+  bir değişiklik.
+
+Ancak ana riskler kapanmamış. Branch/product enriched modellerde satır
+çoğaltma ve product modelindeki `safe_total_basket` problemi hala devam ediyor.
 
 ## Çalıştırılan Kontroller
 
@@ -52,13 +69,20 @@ revenue reconciliation toplamları kontrol edildi.
 | --- | --- |
 | `dbt compile --select models/intermediate models/marts` | Geçti |
 | `dbt test --select models/intermediate models/marts` | 17 passed, 0 failed |
-| `dbt build --select models/intermediate models/marts` | 22 passed, 2 failed |
+| İlk `dbt build --select models/intermediate models/marts` | 23 passed, 1 failed |
 | `dbt build --select +int_orderdetail_order_product_enriched +int_orderdetail_order_customer_enriched` | 46 passed, 0 failed |
+| Parent staging modeller yenilendikten sonra `dbt build --select models/intermediate models/marts` | 24 passed, 0 failed |
 
-İlk full intermediate/marts build hata verdi çünkü o anda target schema içinde
-`stg_raw_categories` ve `stg_raw_customers` yoktu. Bu enriched modeller parent
-modelleriyle birlikte build edilince gerekli staging tabloları oluştu ve build
-geçti.
+İlk full intermediate/marts build bu kez `int_orderdetail_order_customer_enriched`
+üzerinde hata verdi. Sebep SQL'in kendisi değil, target schema içinde eski
+`stg_raw_customers` tablosunun durmasıydı: model SQL'inde `birth_date` artık
+`DATE`, fakat mevcut target tablo hala `STRING` olduğu için `date_diff()` hata
+verdi. Parent staging modellerle birlikte build edilince `stg_raw_customers`
+yenilendi ve aynı intermediate/marts build geçti.
+
+Bu şunu gösteriyor: `models/intermediate models/marts` seçimi tek başına stale
+staging objelerini düzeltmeyebilir. Temiz ve güvenilir build için ya parent
+seçimi kullanılmalı ya da önce staging build edilmelidir.
 
 ## Diagnostic Metrikler
 
@@ -72,6 +96,12 @@ geçti.
 | `stg_order_details` satır sayısı | 51,185,032 |
 | `int_orderdetail_order_enriched` satır sayısı | 51,185,032 |
 | `int_orderdetail_order_branch_enriched` satır sayısı | 409,139,014 |
+| `int_orderdetail_order_customer_enriched` satır sayısı | 51,185,032 |
+| `int_orderdetail_order_product_enriched` satır sayısı | 409,139,014 |
+| `int_orderdetail_order_branch_enriched` duplicate `order_detail_id` sayısı | 50,561,257 |
+| `int_orderdetail_order_product_enriched` duplicate `order_detail_id` sayısı | 50,561,257 |
+| `int_orderdetail_order_customer_enriched` duplicate `order_detail_id` sayısı | 0 |
+| `int_orderdetail_order_enriched` duplicate `order_detail_id` sayısı | 0 |
 | `int_order_revenue` satır sayısı | 10,235,193 |
 | Line'ı olmayan order sayısı | 0 |
 | Order header'ı olmayan order-detail line sayısı | 0 |
@@ -107,6 +137,10 @@ Gözlenen etki:
 | `int_orderdetail_order_enriched` | 51,185,032 |
 | `int_orderdetail_order_branch_enriched` | 409,139,014 |
 
+Ayrıca `int_orderdetail_order_branch_enriched` içinde 50,561,257 adet
+`order_detail_id` birden fazla kez geliyor. Bu modelin order-detail grain claim
+etmesi artık güvenilir değil.
+
 Bu modelden yapılacak herhangi bir downstream aggregation, metrikleri branch
 başına düşen ortalama coverage satırı kadar fazla gösterebilir.
 
@@ -141,6 +175,10 @@ Gözlenen etki:
 | `int_orderdetail_order_customer_enriched` | 51,185,032 | 13,105,667,503.38 | 0.00 |
 | `int_orderdetail_order_branch_enriched` | 409,139,014 | 104,783,784,909.23 | 91,678,117,405.85 |
 | `int_orderdetail_order_product_enriched` | 409,139,014 | 663,523,186,554.21 | 650,417,519,050.83 |
+
+`int_orderdetail_order_product_enriched` içinde de 50,561,257 adet
+`order_detail_id` duplicate durumda. Yani problem sadece revenue toplamında
+değil, model grain'inde de var.
 
 Önerilen fix:
 
@@ -237,6 +275,82 @@ Enriched order-detail modellerinde declare edilen grain'i koruyan testler yok.
   testleri ekleyin.
 - Her intermediate modelin grain bilgisini dokümantasyonda net yazın.
 
+### 7. Orta: Yeni Window Metrikleri Yanlış Grain Üzerinde Hesaplanıyor
+
+Etkilenen dosyalar:
+
+- `superstore/models/intermediate/int_orderdetail_order_branch_enriched.sql`
+- `superstore/models/intermediate/int_orderdetail_order_customer_enriched.sql`
+
+Main'den gelen değişikliklerle branch ve customer enriched modellere yeni window
+metrikleri eklenmiş. Bunlar faydalı olabilir, ama şu an bazıları yanlış grain
+üzerinde hesaplanıyor.
+
+Branch enriched modelde:
+
+```sql
+sum(total_price) over(partition by sales_orders.branch_id) as branch_total_revenue,
+avg(safe_total_basket) over(partition by sales_orders.branch_id) as branch_avg_basket
+```
+
+Bu hesaplar `stg_branch` join'inden sonra çoğalmış rowset üzerinde çalışıyor.
+Dolayısıyla branch total/average metrikleri coverage join'i yüzünden
+şişebilir veya anlamsızlaşabilir.
+
+Customer enriched modelde:
+
+```sql
+dense_rank() over(
+    partition by customer_id
+    order by order_date
+) as customer_order_number
+```
+
+Bu order-detail grain'de çalışıyor. Aynı müşterinin aynı gün birden fazla
+order'ı varsa veya bir order'ın birden fazla line'ı varsa order number yorumu
+net değil. Benzer şekilde:
+
+```sql
+avg(order_total_quantity) over(partition by customer_id) as customer_avg_basket_quantity
+```
+
+`order_total_quantity` order seviyesinde bir değer, ama order-detail satırlarında
+tekrar ediyor. Bu nedenle ortalama, order başına değil line ağırlıklı hesaplanır.
+
+Önerilen fix:
+
+- Customer lifecycle, order number, AOV, recency, tenure gibi metrikler önce
+  order grain'de hesaplanmalı.
+- Sonra gerekirse order-detail modellerine join edilmeli.
+- Branch total/average metrikleri `int_order_revenue` veya
+  `fct_daily_branch_revenue` gibi grain'i net revenue modellerinden gelmeli.
+
+### 8. Düşük/Orta: Stale Staging Objeleri Build Hatası Üretebiliyor
+
+Etkilenen dosya:
+
+- `superstore/models/staging/stg_raw_customers.sql`
+
+`stg_raw_customers.birth_date` artık `DATE` olarak cast ediliyor. Bu iyi bir
+değişiklik. Ancak target schema içinde eski `stg_raw_customers` tablosu
+duruyorsa `int_orderdetail_order_customer_enriched` hala `birth_date` alanını
+`STRING` görebiliyor ve şu ifade patlıyor:
+
+```sql
+date_diff(current_date(), birth_date, year) as customer_age
+```
+
+Parent staging modellerle birlikte build edilince bu hata kayboldu.
+
+Önerilen fix:
+
+- CI veya lokal build akışında intermediate/marts build etmeden önce staging
+  modellerin de güncel olduğundan emin olun.
+- Geliştirme sırasında `+model_name` seçimi veya `dbt build --select staging
+  models/intermediate models/marts` gibi daha güvenilir bir seçim kullanın.
+- Staging model contract/test tarafında tip değişikliklerini yakalayacak
+  kontroller düşünün.
+
 ## Öncelikli Checklist
 
 ### P0 - Metric Inflation Risklerini Düzelt
@@ -248,6 +362,9 @@ Enriched order-detail modellerinde declare edilen grain'i koruyan testler yok.
       grain'de olacaksa bırak.
 - [ ] `int_orderdetail_order_product_enriched.safe_total_basket` alanını düzelt;
       order header revenue her line'da tekrar etmemeli.
+- [ ] `int_orderdetail_order_branch_enriched` içindeki `branch_total_revenue`
+      ve `branch_avg_basket` hesaplarını çoğalmış rowset'ten çıkar; bu metrikler
+      order veya mart grain'den gelmeli.
 - [ ] Row-count diagnostic'leri tekrar çalıştır ve order-detail grain
       modellerinin, aksi açıkça dokümante edilmedikçe, 51,185,032 satırda
       kaldığını doğrula.
@@ -262,17 +379,23 @@ Enriched order-detail modellerinde declare edilen grain'i koruyan testler yok.
       reconciliation testi ekle.
 - [ ] `fct_daily_branch_revenue` aggregate revenue ve order count değerlerini
       `int_order_revenue` ile karşılaştıran test veya audit query ekle.
+- [ ] Branch/product enriched modeller için duplicate `order_detail_id` testleri
+      ekle; bu testler şu an fail etmeli ve fix sonrası pass etmeli.
 
 ### P2 - Data Type ve Model Contract'ları Güçlendir
 
 - [ ] `stg_order_details.unit_price` ve `stg_order_details.total_price`
       alanlarını `FLOAT64` yerine `NUMERIC` yap.
+- [x] `stg_raw_customers.birth_date` alanını `DATE` tipine çevir. Bu main'den
+      gelen son değişikliklerle yapılmış görünüyor.
 - [ ] `int_order_revenue` modelini tekrar build et ve type değişiminden sonra
       reconciliation'ın sıfır kaldığını doğrula.
 - [ ] Branch consistency testleri eklendikten sonra `int_branch_dim` içindeki
       `any_value` kullanımını deterministic aggregation ile değiştir.
 - [ ] Her intermediate ve mart model için YAML açıklamalarına model grain'ini
       ekle.
+- [ ] Customer lifecycle/window metriklerini order-detail grain yerine order
+      grain'de hesaplayacak şekilde yeniden modelle.
 
 ### P3 - Model Surface'ı Temizle
 
@@ -284,10 +407,18 @@ Enriched order-detail modellerinde declare edilen grain'i koruyan testler yok.
       önlemek için disable et veya kaldır.
 - [ ] Model değişikliklerinden sonra audit kontrollerini çalıştırmak için
       `docs/dbt_bq_commands.md` içine kısa bir komut bölümü ekle.
+- [ ] Build akışında stale staging objesi kalmaması için önerilen komut
+      sırasını netleştir.
 
 ## Fix Sonrası Önerilen Validation
 
 P0 ve P1 tamamlandıktan sonra şunları çalıştırın:
+
+Önce staging'i de yenilemek daha güvenilir:
+
+```bash
+uv run dbt build --project-dir superstore --select staging
+```
 
 ```bash
 uv run dbt build --project-dir superstore --select models/intermediate models/marts
@@ -303,6 +434,8 @@ Beklenen post-fix durumlar:
   count'u `stg_order_details` ile aynı olmalı.
 - `int_orderdetail_order_product_enriched`, order-detail grain'de kalacaksa row
   count'u `stg_order_details` ile aynı olmalı.
+- Branch/product enriched modellerde duplicate `order_detail_id` sayısı 0
+  olmalı.
 - Herhangi bir order-detail grain modelinden `safe_total_basket` toplandığında,
   canonical order revenue ile eşitlik sadece order başına first-line allocation
   pattern'i kullanılıyorsa beklenmeli.
