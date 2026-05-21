@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Fetch monthly CPI data from TCMB EVDS and write a dbt seed CSV.
 
-The script intentionally uses the official EVDS HTTP interface directly instead
-of an unofficial client package. It reads the API key from EVDS_API_KEY first,
+The script uses the official EVDS HTTP interface. It reads the API key from EVDS_API_KEY first,
 then TCMB_API_KEY, then a local .env file if present.
 """
 
@@ -39,13 +38,20 @@ BASE_MONTH = date(2023, 8, 1)
 
 @dataclass(frozen=True)
 class CpiRow:
+    """Normalized CPI row shape that will be written to the dbt seed CSV."""
+
     cpi_month: date
     cpi_index_2003_100: Decimal
     source_series_code: str = SERIES_CODE
 
 
 def load_dotenv(path: Path) -> None:
-    """Load simple KEY=VALUE pairs from .env without overriding environment."""
+    """Load local .env secrets so the user does not need to export the key.
+
+    This is a intentionally small parser: it supports plain KEY=VALUE lines and
+    ignores comments/blank lines. Existing shell environment values win over
+    .env values so CI or explicit shell exports can override local defaults.
+    """
     if not path.exists():
         return
 
@@ -61,6 +67,7 @@ def load_dotenv(path: Path) -> None:
 
 
 def get_api_key() -> str:
+    """Return the EVDS API key from env or fail before making any HTTP request."""
     load_dotenv(REPO_ROOT / ".env")
     api_key = os.getenv("EVDS_API_KEY") or os.getenv("TCMB_API_KEY")
     if not api_key:
@@ -71,6 +78,7 @@ def get_api_key() -> str:
 
 
 def evds_url(start_date: str, end_date: str) -> str:
+    """Build the EVDS URL for monthly JSON output for the configured CPI series."""
     return (
         f"{EVDS_BASE_URL}/series={SERIES_CODE}"
         f"&startDate={start_date}"
@@ -81,6 +89,12 @@ def evds_url(start_date: str, end_date: str) -> str:
 
 
 def fetch_json(url: str, api_key: str, retries: int = 3, timeout: int = 30) -> dict[str, Any]:
+    """Request EVDS JSON with basic retry handling for temporary failures.
+
+    Auth failures stop immediately because retrying will not fix an invalid key.
+    Rate limits and server/network failures retry a few times with exponential
+    backoff so a transient EVDS issue does not fail the script unnecessarily.
+    """
     last_error: Exception | None = None
 
     for attempt in range(1, retries + 1):
@@ -106,6 +120,7 @@ def fetch_json(url: str, api_key: str, retries: int = 3, timeout: int = 30) -> d
 
 
 def parse_month(value: Any) -> date:
+    """Parse EVDS date strings and normalize them to the first day of the month."""
     text = str(value).strip()
     formats = ("%Y-%m-%d", "%d-%m-%Y", "%d.%m.%Y", "%Y-%m", "%Y-%m-%dT%H:%M:%S")
     for fmt in formats:
@@ -125,6 +140,7 @@ def parse_month(value: Any) -> date:
 
 
 def parse_decimal(value: Any) -> Decimal:
+    """Parse CPI values as Decimal to avoid floating-point drift in the seed."""
     if value is None:
         raise ValueError("CPI value is null")
 
@@ -140,6 +156,11 @@ def parse_decimal(value: Any) -> Decimal:
 
 
 def find_value(row: dict[str, Any], candidates: set[str]) -> Any:
+    """Find a value even if EVDS changes dot notation to underscore notation.
+
+    EVDS may return the series column as TP_FG_J0 even though the requested
+    series is TP.FG.J0, so this lookup normalizes both styles.
+    """
     normalized = {key.lower().replace(".", "_"): key for key in row}
     for candidate in candidates:
         key = normalized.get(candidate.lower().replace(".", "_"))
@@ -149,6 +170,7 @@ def find_value(row: dict[str, Any], candidates: set[str]) -> Any:
 
 
 def parse_evds_items(payload: dict[str, Any]) -> list[CpiRow]:
+    """Convert the raw EVDS response payload into sorted normalized CPI rows."""
     items = payload.get("items")
     if not isinstance(items, list) or not items:
         raise SystemExit(f"EVDS response did not contain non-empty 'items': {payload}")
@@ -166,6 +188,7 @@ def parse_evds_items(payload: dict[str, Any]) -> list[CpiRow]:
 
 
 def month_range(start: date, end: date) -> list[date]:
+    """Return first-of-month dates from start through end, inclusive."""
     months: list[date] = []
     current = start
     while current <= end:
@@ -177,6 +200,11 @@ def month_range(start: date, end: date) -> list[date]:
 
 
 def validate_rows(rows: list[CpiRow]) -> None:
+    """Validate that fetched CPI data is complete enough for this analysis.
+
+    The sales dataset spans 2021-01 through 2023-08. We require CPI coverage for
+    that full period and the selected real-revenue base month, August 2023.
+    """
     if not rows:
         raise SystemExit("No CPI rows parsed from EVDS response.")
 
@@ -197,6 +225,7 @@ def validate_rows(rows: list[CpiRow]) -> None:
 
 
 def write_csv(rows: list[CpiRow], output_path: Path) -> None:
+    """Write normalized CPI rows to the dbt seed CSV path."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", newline="", encoding="utf-8") as csv_file:
         writer = csv.DictWriter(
@@ -215,6 +244,7 @@ def write_csv(rows: list[CpiRow], output_path: Path) -> None:
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse CLI options for date range and output path overrides."""
     parser = argparse.ArgumentParser(description="Fetch monthly CPI data from TCMB EVDS.")
     parser.add_argument("--start-date", default=DEFAULT_START_DATE, help="EVDS startDate, DD-MM-YYYY.")
     parser.add_argument("--end-date", default=DEFAULT_END_DATE, help="EVDS endDate, DD-MM-YYYY.")
@@ -228,6 +258,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
+    """Run the end-to-end fetch, validation, and CSV write flow."""
     args = parse_args()
     api_key = get_api_key()
     url = evds_url(args.start_date, args.end_date)
