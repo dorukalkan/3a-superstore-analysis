@@ -26,12 +26,25 @@ final as (
         order_details.amount,
         order_details.unit_price,
         order_details.total_price,
+        sum(order_details.amount)over(partition by order_details.order_id)as order_total_quantity,
+        count(*) over(partition by order_details.order_id) as order_item_count,
+        safe_divide(order_details.total_price,sum(order_details.total_price)over(partition by order_details.order_id)) as order_revenue_share,
+
+        extract(year from orders.order_date) as order_year,
+        extract(month from orders.order_date) as order_month,
+        extract(quarter from orders.order_date) as order_quarter,
+        format_date('%A', order_date) as order_day_name,
+        format_date('%Y-%m', order_date) as order_year_month,
+            case
+            when extract(dayofweek from orders.order_date) in (1,7)
+            then 'Weekend'
+            else 'Weekday'
+        end as order_day_type,
 
         -- order columns
         orders.branch_id,
         orders.customer_id,
         orders.order_date,
-        orders.customer_name,
         case
         when row_number() over(
             partition by order_details.order_id
