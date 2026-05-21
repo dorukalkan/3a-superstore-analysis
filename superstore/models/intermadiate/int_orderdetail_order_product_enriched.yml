@@ -1,0 +1,29 @@
+version: 2
+
+models:
+
+  - name: int_orderdetail_order_product_enriched
+    description: "Order, branch and product enriched intermediate model"
+
+    columns:
+
+      - name: order_detail_id
+        tests:
+          
+          - not_null
+
+      - name: order_id
+        tests:
+          - not_null
+
+      - name: item_id
+        tests:
+          - not_null
+
+      - name: total_price
+
+      - name: safe_total_basket
+
+      - name: brand
+
+      - name: category1
