@@ -2,11 +2,13 @@
 
 SELECT
 
-    -- ORDER INFO
+    -- ORDER DETAIL
     od.order_detail_id,
     od.order_id,
+
+    -- ORDER INFO
     o.order_date,
-    o.order_datetime,
+    
 
     -- CUSTOMER
     o.customer_id,
@@ -14,12 +16,11 @@ SELECT
 
     -- BRANCH
     b.branch_id,
-    b.region        AS branch_region,
-    b.city          AS branch_city,
-    b.town          AS branch_town,
-    b.branch_town,
-    b.latitude      AS branch_lat,
-    b.longitude     AS branch_lon,
+    b.region       AS branch_region,
+    b.city         AS branch_city,
+    b.town         AS branch_town,
+    b.latitude     AS branch_lat,
+    b.longitude    AS branch_lon,
 
     -- PRODUCT
     od.item_id,
@@ -31,20 +32,11 @@ SELECT
     c.category3,
     c.category4,
 
-    -- SALES METRICS
+    -- SALES
     od.amount,
     od.unit_price,
     od.total_price,
-
-    -- ORDER METRICS
-    o.total_basket AS safe_total_basket,
-
-    -- DATE FEATURES
-    EXTRACT(YEAR FROM o.order_date) AS order_year,
-    EXTRACT(MONTH FROM o.order_date) AS order_month,
-    FORMAT_DATE('%Y-%m', o.order_date) AS year_month,
-    EXTRACT(QUARTER FROM o.order_date) AS order_quarter,
-    EXTRACT(DAYOFWEEK FROM o.order_date) AS day_of_week
+    o.total_basket as safe_total_basket
 
 FROM {{ ref('stg_order_details') }} od
 
