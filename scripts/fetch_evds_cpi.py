@@ -33,7 +33,7 @@ DEFAULT_START_DATE = "01-01-2020"
 DEFAULT_END_DATE = "31-08-2023"
 REQUIRED_START_MONTH = date(2021, 1, 1)
 REQUIRED_END_MONTH = date(2023, 8, 1)
-BASE_MONTH = date(2023, 8, 1)
+REAL_REVENUE_BASE_MONTH = date(2023, 7, 1)
 
 
 @dataclass(frozen=True)
@@ -203,7 +203,8 @@ def validate_rows(rows: list[CpiRow]) -> None:
     """Validate that fetched CPI data is complete enough for this analysis.
 
     The sales dataset spans 2021-01 through 2023-08. We require CPI coverage for
-    that full period and the selected real-revenue base month, August 2023.
+    that full period and the selected real-revenue base month, July 2023. August
+    remains required because the source sales data includes a partial August.
     """
     if not rows:
         raise SystemExit("No CPI rows parsed from EVDS response.")
@@ -220,8 +221,8 @@ def validate_rows(rows: list[CpiRow]) -> None:
         formatted = ", ".join(month.isoformat() for month in missing)
         raise SystemExit(f"Missing required CPI months: {formatted}")
 
-    if BASE_MONTH not in observed:
-        raise SystemExit(f"Missing base CPI month: {BASE_MONTH.isoformat()}")
+    if REAL_REVENUE_BASE_MONTH not in observed:
+        raise SystemExit(f"Missing base CPI month: {REAL_REVENUE_BASE_MONTH.isoformat()}")
 
 
 def write_csv(rows: list[CpiRow], output_path: Path) -> None:
@@ -267,10 +268,13 @@ def main() -> int:
     validate_rows(rows)
     write_csv(rows, args.output)
 
-    base_row = next(row for row in rows if row.cpi_month == BASE_MONTH)
+    base_row = next(row for row in rows if row.cpi_month == REAL_REVENUE_BASE_MONTH)
     print(f"Wrote {len(rows)} CPI rows to {args.output}")
     print(f"Month range: {rows[0].cpi_month.isoformat()} to {rows[-1].cpi_month.isoformat()}")
-    print(f"Base month CPI ({BASE_MONTH.isoformat()}): {base_row.cpi_index_2003_100}")
+    print(
+        "Real revenue base month CPI "
+        f"({REAL_REVENUE_BASE_MONTH.isoformat()}): {base_row.cpi_index_2003_100}"
+    )
     print(f"Source series: {SERIES_CODE}")
     return 0
 
