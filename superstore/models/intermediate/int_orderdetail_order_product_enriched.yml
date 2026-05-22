@@ -3,7 +3,7 @@ version: 2
 models:
 
   - name: int_orderdetail_order_product_enriched
-    description: "Order, branch and product enriched intermediate model"
+    description: "Intermediate enriched order detail model with deduplicated branch and category joins"
 
     columns:
 
