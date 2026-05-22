@@ -63,6 +63,17 @@ date_diff(
 count(distinct format_date('%Y-%m', order_date))
 over(partition by customer_id)
 as customer_active_months,
+min(order_date)
+over(partition by customer_id)
+as customer_first_order_date,
+max(order_date)
+over(partition by customer_id)
+as customer_last_order_date,
+dense_rank() over(
+    partition by customer_id
+    order by order_date, order_id
+)
+as customer_order_number,
 
 
         orderdetail_order.branch_id,
