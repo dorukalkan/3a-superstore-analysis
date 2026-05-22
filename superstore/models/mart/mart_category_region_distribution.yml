@@ -1,0 +1,32 @@
+version: 2
+
+models:
+
+  - name: mart_category_region_distribution
+    description: "Aggregated mart table for regional category demand and distribution analysis"
+
+    columns:
+
+      - name: branch_region
+        tests:
+          - not_null
+
+      - name: branch_city
+        tests:
+          - not_null
+
+      - name: category1
+        tests:
+          - not_null
+
+      - name: category2
+
+      - name: total_orders
+
+      - name: unique_products
+
+      - name: total_quantity
+
+      - name: total_revenue
+
+      - name: avg_basket_value
