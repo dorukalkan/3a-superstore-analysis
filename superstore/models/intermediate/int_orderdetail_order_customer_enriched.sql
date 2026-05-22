@@ -32,9 +32,6 @@ final as (
         customers.gender,
         customers.email,
         customers.region,
-        count(distinct customer_id)
-over(partition by region)
-as regional_customer_count,
         customers.city,
         customers.town,
         customers.district,
@@ -42,26 +39,12 @@ as regional_customer_count,
         customers.birth_date,
 date_diff(current_date(), birth_date, year)
 as customer_age,
-        dense_rank() over(
-        partition by customer_id
-        order by order_date
-        ) as customer_order_number,
         sum(total_price)
 over(partition by customer_id)
 as customer_lifetime_revenue,
 count(distinct order_id)
 over(partition by customer_id)
 as customer_total_orders,
-avg(
-    case
-        when safe_total_basket > 0
-        then safe_total_basket
-    end
-) over(partition by customer_id)
-as customer_avg_order_value,
-avg(order_total_quantity)
-over(partition by customer_id)
-as customer_avg_basket_quantity,
 date_diff(
     current_date(),
     max(order_date)
@@ -89,7 +72,7 @@ as customer_active_months,
         orderdetail_order.amount,
         orderdetail_order.unit_price,
         orderdetail_order.total_price,
-        orderdetail_order.safe_total_basket
+        orderdetail_order.total_basket
 
     from orderdetail_order
 

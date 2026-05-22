@@ -45,15 +45,7 @@ final as (
         orders.branch_id,
         orders.customer_id,
         orders.order_date,
-        case
-        when row_number() over(
-            partition by order_details.order_id
-            order by order_details.order_detail_id
-        ) = 1
-
-        then orders.total_basket
-        else 0
-    end as safe_total_basket
+        orders.total_basket as total_basket,
 
     from order_details
 
