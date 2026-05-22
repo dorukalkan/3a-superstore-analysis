@@ -22,6 +22,11 @@ Build specific models
 uv run dbt build --select fct_daily_branch_revenue
 ```
 
+Load CPI seed and build the monthly real-revenue mart
+```bash
+uv run dbt build --select +fct_monthly_revenue
+```
+
 List all staging models
 ```bash
 uv run dbt ls --select staging
