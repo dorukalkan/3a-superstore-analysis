@@ -38,15 +38,15 @@ final as (
         customers.address,
         customers.birth_date,
 date_diff(current_date(), birth_date, year)
-as customer_age,
-        sum(total_price)
+as customer_age,        
+sum(total_price)
 over(partition by customer_id)
 as customer_lifetime_revenue,
 count(distinct order_id)
 over(partition by customer_id)
 as customer_total_orders,
 date_diff(
-    current_date(),
+    max(order_date) over(),
     max(order_date)
         over(partition by customer_id),
     day
