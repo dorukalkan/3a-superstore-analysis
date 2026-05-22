@@ -32,11 +32,7 @@ order_revenue as (
         orders.total_basket as nominal_order_revenue,
         coalesce(order_lines.line_nominal_revenue, cast(0 as numeric)) as line_nominal_revenue,
         coalesce(order_lines.units_sold, 0) as units_sold,
-        coalesce(order_lines.line_item_count, 0) as line_item_count,
-        orders.total_basket - coalesce(order_lines.line_nominal_revenue, cast(0 as numeric))
-            as revenue_reconciliation_diff,
-        abs(orders.total_basket - coalesce(order_lines.line_nominal_revenue, cast(0 as numeric))) > 0.01
-            as has_revenue_reconciliation_issue
+        coalesce(order_lines.line_item_count, 0) as line_item_count
     from orders
     left join order_lines
         on orders.order_id = order_lines.order_id

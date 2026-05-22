@@ -72,6 +72,3 @@ models:
 
       - name: units_per_order
         description: "Units sold divided by order count."
-
-      - name: revenue_reconciliation_abs_diff
-        description: "Sum of absolute order-level differences between header and line revenue."
