@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_cpi_monthly
+    description: "Monthly TCMB EVDS CPI index levels staged from the CPI seed at one row per CPI month."
+    columns:
+      - name: cpi_month
+        description: "First day of the CPI observation month."
+        tests:
+          - not_null
+          - unique
+
+      - name: cpi_index_2003_100
+        description: "Consumer price index level from TCMB EVDS with the source 2003=100 baseline."
+        tests:
+          - not_null
+
+      - name: source_series_code
+        description: "TCMB EVDS series code used to fetch the CPI observation."
+        tests:
+          - not_null
