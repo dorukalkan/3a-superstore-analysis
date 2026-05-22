@@ -1,50 +1,91 @@
 {{ config(materialized='view') }}
 
+WITH order_details AS (
+
+    SELECT *
+    FROM {{ ref('stg_order_details') }}
+
+),
+
+orders AS (
+
+    SELECT *
+    FROM {{ ref('stg_orders') }}
+
+),
+
+deduplicated_branch AS (
+
+    SELECT *
+    FROM (
+
+        SELECT *,
+
+        ROW_NUMBER() OVER(
+            PARTITION BY branch_id
+            ORDER BY city
+        ) AS rn
+
+        FROM {{ ref('stg_branch') }}
+
+    )
+
+    WHERE rn = 1
+
+),
+
+deduplicated_categories AS (
+
+    SELECT *
+    FROM (
+
+        SELECT *,
+
+        ROW_NUMBER() OVER(
+            PARTITION BY itemid
+            ORDER BY category1
+        ) AS rn
+
+        FROM {{ ref('stg_raw_categories') }}
+
+    )
+
+    WHERE rn = 1
+
+)
+
 SELECT
 
-    -- ORDER DETAIL
     od.order_detail_id,
     od.order_id,
 
-    -- ORDER INFO
     o.order_date,
-    
+    o.branch_id,
 
-    -- CUSTOMER
-    o.customer_id,
-    o.customer_name,
+    b.region AS branch_region,
+    b.city AS branch_city,
+    b.town AS branch_town,
 
-    -- BRANCH
-    b.branch_id,
-    b.region       AS branch_region,
-    b.city         AS branch_city,
-    b.town         AS branch_town,
-    b.latitude     AS branch_lat,
-    b.longitude    AS branch_lon,
-
-    -- PRODUCT
     od.item_id,
-    od.item_code,
-    c.itemname,
-    c.brand,
+
     c.category1,
     c.category2,
     c.category3,
     c.category4,
 
-    -- SALES
     od.amount,
     od.unit_price,
     od.total_price,
-    o.total_basket as safe_total_basket
 
-FROM {{ ref('stg_order_details') }} od
+    SAFE_CAST(o.total_basket AS NUMERIC) AS safe_total_basket
 
-LEFT JOIN {{ ref('stg_orders') }} o
+FROM order_details od
+
+LEFT JOIN orders o
     ON od.order_id = o.order_id
 
-LEFT JOIN {{ ref('stg_branch') }} b
+LEFT JOIN deduplicated_branch b
     ON o.branch_id = b.branch_id
 
-LEFT JOIN {{ ref('stg_raw_categories') }} c
+LEFT JOIN deduplicated_categories c
     ON od.item_id = c.itemid
