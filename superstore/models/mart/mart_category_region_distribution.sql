@@ -3,24 +3,17 @@
 SELECT
 
     branch_region,
-    CASE
-    WHEN branch_region = 'Marmara' THEN 'Marmara, Turkey'
-    WHEN branch_region = 'Ege' THEN 'Aegean Region, Turkey'
-    WHEN branch_region = 'Akdeniz' THEN 'Mediterranean Region, Turkey'
-    WHEN branch_region = 'Karadeniz' THEN 'Black Sea Region, Turkey'
-    WHEN branch_region = 'İç Anadolu' THEN 'Central Anatolia, Turkey'
-    WHEN branch_region = 'Doğu Anadolu' THEN 'Eastern Anatolia, Turkey'
-    WHEN branch_region = 'Güneydoğu Anadolu' THEN 'Southeastern Anatolia, Turkey'
-END AS map_region,
-
     branch_city,
 
     category1,
     category2,
 
-    COUNT(DISTINCT order_id) AS total_orders,
+    item_id,
 
-    COUNT(DISTINCT item_id) AS unique_products,
+    EXTRACT(MONTH FROM order_date) AS month_no,
+    FORMAT_DATE('%b', order_date) AS month_name,
+
+    COUNT(DISTINCT order_id) AS total_orders,
 
     SUM(amount) AS total_quantity,
 
@@ -38,4 +31,9 @@ GROUP BY
     branch_city,
 
     category1,
-    category2
+    category2,
+
+    item_id,
+
+    month_no,
+    month_name
