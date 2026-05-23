@@ -3,17 +3,18 @@
 SELECT
 
     branch_region,
+
     branch_city,
 
     category1,
     category2,
 
-    item_id,
-
     EXTRACT(MONTH FROM order_date) AS month_no,
     FORMAT_DATE('%b', order_date) AS month_name,
 
     COUNT(DISTINCT order_id) AS total_orders,
+
+    COUNT(DISTINCT item_id) AS unique_products,
 
     SUM(amount) AS total_quantity,
 
@@ -32,8 +33,6 @@ GROUP BY
 
     category1,
     category2,
-
-    item_id,
 
     month_no,
     month_name
