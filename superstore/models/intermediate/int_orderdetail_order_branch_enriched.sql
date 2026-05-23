@@ -29,7 +29,7 @@ final as (
         sales_orders.order_day_name,
         sales_orders.order_year_month,
         sum(total_price)over(partition by sales_orders.branch_id)as branch_total_revenue,
-        avg(safe_total_basket)over(partition by sales_orders.branch_id)as branch_avg_basket,
+        avg(total_basket)over(partition by sales_orders.branch_id)as branch_avg_basket,
 
         -- branch info
         sales_orders.branch_id,
@@ -47,7 +47,7 @@ final as (
         sales_orders.amount,
         sales_orders.unit_price,
         sales_orders.total_price,
-        sales_orders.safe_total_basket
+        sales_orders.total_basket
 
     from sales_orders
 
