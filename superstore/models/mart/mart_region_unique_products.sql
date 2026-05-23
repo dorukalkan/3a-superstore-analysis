@@ -3,7 +3,7 @@
 SELECT
     branch_region,
 
-    COUNT(DISTINCT item_id) AS unique_products
+    COUNT(DISTINCT CONCAT(category1, '-', category2)) AS unique_products
 
 FROM {{ ref('int_orderdetail_order_product_enriched') }}
 
