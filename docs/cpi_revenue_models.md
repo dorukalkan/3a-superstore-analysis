@@ -31,14 +31,18 @@ The CPI seed is monthly, so the first CPI-adjusted revenue mart is monthly too.
 
 - `order_month` vs `nominal_revenue`
 - `order_month` vs `real_revenue`
+- `order_month` vs `nominal_revenue_index_jan_2021_100`
+- `order_month` vs `real_revenue_index_jan_2021_100`
 
 The existing daily branch revenue mart remains nominal. We do not invent daily
 CPI values from a monthly CPI seed. A future branch-level real revenue mart
 should aggregate revenue to a monthly branch grain first, then join monthly CPI.
 
-July 2023 is the constant-TRY reporting month. The sales data includes only a
-partial August 2023, so August remains in the mart but should not be treated as
-a full-month trend comparison without that caveat.
+January 2021 is the constant-TRY reporting month. It is the first sales month
+in the dataset, so indexed growth charts can start nominal and real revenue at
+the same value and then show how they diverge over time. The sales data includes
+only a partial August 2023, so August remains in the mart but should not be
+treated as a full-month trend comparison without that caveat.
 
 ## `stg_cpi_monthly`
 
@@ -71,13 +75,13 @@ give downstream models a typed and documented CPI source.
 `int_cpi_monthly` turns CPI index levels into CPI metrics that revenue models
 can use.
 
-It starts from `stg_cpi_monthly`, finds the July 2023 CPI index level once, and
-adds that base index to every row:
+It starts from `stg_cpi_monthly`, finds the January 2021 CPI index level once,
+and adds that base index to every row:
 
 ```sql
 max(
     case
-        when cpi_month = date '2023-07-01'
+        when cpi_month = date '2021-01-01'
         then cpi_index_2003_100
     end
 ) over () as base_cpi_index_2003_100
@@ -110,27 +114,31 @@ July 2023 MoM CPI change is therefore approximately:
 
 That is about `9.49%`.
 
-The real revenue adjustment uses the July 2023 CPI index as the reporting base:
+The real revenue adjustment uses the January 2021 CPI index as the reporting
+base:
 
 ```text
-inflation_adjustment_factor = CPI_July_2023 / CPI_revenue_month
+inflation_adjustment_factor = CPI_January_2021 / CPI_revenue_month
 ```
 
-For January 2021, the seed has CPI index `513.30`. The July 2023 factor is
+For January 2021, the seed has CPI index `513.30`, so the factor is:
+
+```text
+513.30 / 513.30 = 1
+```
+
+This means January 2021 nominal and real revenue match in the first month of
+the sales series.
+
+For July 2023, the seed has CPI index `1479.84`. The January 2021 factor is
 approximately:
 
 ```text
-1479.84 / 513.30 = 2.883
+513.30 / 1479.84 = 0.346866
 ```
 
-This means `100` nominal TRY in January 2021 is represented as roughly `288.3`
-July 2023 TRY for constant-price comparison.
-
-For July 2023 itself:
-
-```text
-1479.84 / 1479.84 = 1
-```
+This means `100` nominal TRY in July 2023 is represented as roughly `34.7`
+January 2021 TRY for constant-price comparison.
 
 The month-over-month and year-over-year rate columns are null when the required
 comparison CPI row is not available in the CPI model.
@@ -169,17 +177,24 @@ line_real_revenue = line_nominal_revenue * inflation_adjustment_factor
 real_avg_order_value = nominal_avg_order_value * inflation_adjustment_factor
 ```
 
+It also creates January 2021-based growth indexes for presentation charts:
+
+```text
+nominal_revenue_index_jan_2021_100 = nominal_revenue / January_2021_nominal_revenue * 100
+real_revenue_index_jan_2021_100 = real_revenue / January_2021_real_revenue * 100
+```
+
 A small example:
 
 | Input | Value |
 | --- | ---: |
 | Monthly nominal revenue | 1,000 TRY |
-| CPI adjustment factor | 2.883 |
+| CPI adjustment factor | 0.346866 |
 
 The mart returns approximately:
 
 ```text
-real_revenue = 1,000 * 2.883 = 2,883 July 2023 TRY
+real_revenue = 1,000 * 0.346866 = 346.87 January 2021 TRY
 ```
 
 The mart exposes both the sales metrics and the CPI context needed to interpret
@@ -191,6 +206,7 @@ them:
 | Volume | `order_count`, `customer_count`, `units_sold`, `line_item_count` |
 | Nominal sales | `nominal_revenue`, `line_nominal_revenue`, `nominal_avg_order_value` |
 | Real sales | `real_revenue`, `line_real_revenue`, `real_avg_order_value` |
+| Growth indexes | `nominal_revenue_index_jan_2021_100`, `real_revenue_index_jan_2021_100` |
 | CPI context | `cpi_index_2003_100`, `cpi_mom_rate`, `cpi_yoy_rate`, `inflation_adjustment_factor`, `real_revenue_base_month` |
 
 ## Example Queries
@@ -223,7 +239,18 @@ from {{ ref('fct_monthly_revenue') }}
 order by order_month
 ```
 
-Inspect the July 2023 base month:
+Compare nominal and real revenue growth on a common January 2021 = 100 scale:
+
+```sql
+select
+    order_month,
+    nominal_revenue_index_jan_2021_100,
+    real_revenue_index_jan_2021_100
+from {{ ref('fct_monthly_revenue') }}
+order by order_month
+```
+
+Inspect the January 2021 base month:
 
 ```sql
 select
@@ -232,10 +259,10 @@ select
     real_revenue,
     inflation_adjustment_factor
 from {{ ref('fct_monthly_revenue') }}
-where order_month = date '2023-07-01'
+where order_month = date '2021-01-01'
 ```
 
-For July 2023, nominal and real revenue should match because the adjustment
+For January 2021, nominal and real revenue should match because the adjustment
 factor is `1`.
 
 ## Tests
@@ -255,12 +282,13 @@ The singular tests check the calculations and expected scenarios:
 | Test | What it catches |
 | --- | --- |
 | `assert_stg_cpi_monthly_positive_index` | Rejects zero or negative CPI index levels. |
-| `assert_int_cpi_monthly_base_factor` | Verifies the July 2023 CPI factor is exactly `1`. |
+| `assert_int_cpi_monthly_base_factor` | Verifies the January 2021 CPI factor is exactly `1`. |
 | `assert_int_cpi_monthly_rate_coverage` | Ensures MoM and YoY rates are null only when their comparison CPI row is unavailable. |
 | `assert_int_cpi_monthly_rate_math` | Recomputes MoM and YoY ratios and checks the model formulas. |
+| `assert_fct_monthly_revenue_index_base` | Confirms both revenue index fields equal `100` in January 2021. |
 | `assert_fct_monthly_revenue_reconciles` | Confirms monthly order counts and nominal revenue still reconcile to `int_order_revenue`. |
 | `assert_fct_monthly_revenue_real_revenue_math` | Confirms `real_revenue` equals nominal revenue times the CPI factor. |
-| `assert_fct_monthly_revenue_cpi_scenarios` | Confirms January 2021 inflates forward and July 2023 stays unchanged. |
+| `assert_fct_monthly_revenue_cpi_scenarios` | Confirms January 2021 stays unchanged and July 2023 deflates backward. |
 
 These tests focus on the mistakes that would make the chart misleading:
 
