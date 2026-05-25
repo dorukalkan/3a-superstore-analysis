@@ -33,6 +33,7 @@ The CPI seed is monthly, so the first CPI-adjusted revenue mart is monthly too.
 - `order_month` vs `real_revenue`
 - `order_month` vs `nominal_revenue_index_jan_2021_100`
 - `order_month` vs `real_revenue_index_jan_2021_100`
+- `order_month` vs `cpi_index_jan_2021_100`
 
 The existing daily branch revenue mart remains nominal. We do not invent daily
 CPI values from a monthly CPI seed. A future branch-level real revenue mart
@@ -140,6 +141,17 @@ approximately:
 This means `100` nominal TRY in July 2023 is represented as roughly `34.7`
 January 2021 TRY for constant-price comparison.
 
+The model also exposes a cumulative CPI price-level index with the same January
+2021 base:
+
+```text
+cpi_index_jan_2021_100 = CPI_revenue_month / CPI_January_2021 * 100
+```
+
+This index starts at `100` in January 2021 and rises as the price level rises.
+It is better suited to indexed revenue charts than `cpi_mom_rate`, which is a
+monthly percentage change instead of a cumulative price-level series.
+
 The month-over-month and year-over-year rate columns are null when the required
 comparison CPI row is not available in the CPI model.
 
@@ -207,7 +219,7 @@ them:
 | Nominal sales | `nominal_revenue`, `line_nominal_revenue`, `nominal_avg_order_value` |
 | Real sales | `real_revenue`, `line_real_revenue`, `real_avg_order_value` |
 | Growth indexes | `nominal_revenue_index_jan_2021_100`, `real_revenue_index_jan_2021_100` |
-| CPI context | `cpi_index_2003_100`, `cpi_mom_rate`, `cpi_yoy_rate`, `inflation_adjustment_factor`, `real_revenue_base_month` |
+| CPI context | `cpi_index_2003_100`, `cpi_index_jan_2021_100`, `cpi_mom_rate`, `cpi_yoy_rate`, `inflation_adjustment_factor`, `real_revenue_base_month` |
 
 ## Example Queries
 
@@ -220,6 +232,7 @@ Preview the CPI factors that feed the revenue mart:
 select
     cpi_month,
     cpi_index_2003_100,
+    cpi_index_jan_2021_100,
     cpi_mom_rate,
     cpi_yoy_rate,
     inflation_adjustment_factor
@@ -245,7 +258,8 @@ Compare nominal and real revenue growth on a common January 2021 = 100 scale:
 select
     order_month,
     nominal_revenue_index_jan_2021_100,
-    real_revenue_index_jan_2021_100
+    real_revenue_index_jan_2021_100,
+    cpi_index_jan_2021_100
 from {{ ref('fct_monthly_revenue') }}
 order by order_month
 ```
@@ -283,6 +297,8 @@ The singular tests check the calculations and expected scenarios:
 | --- | --- |
 | `assert_stg_cpi_monthly_positive_index` | Rejects zero or negative CPI index levels. |
 | `assert_int_cpi_monthly_base_factor` | Verifies the January 2021 CPI factor is exactly `1`. |
+| `assert_int_cpi_monthly_cpi_index_base` | Verifies the January 2021 CPI index is exactly `100`. |
+| `assert_int_cpi_monthly_cumulative_index_math` | Confirms the January 2021-based CPI index matches the inverse of the inflation adjustment factor. |
 | `assert_int_cpi_monthly_rate_coverage` | Ensures MoM and YoY rates are null only when their comparison CPI row is unavailable. |
 | `assert_int_cpi_monthly_rate_math` | Recomputes MoM and YoY ratios and checks the model formulas. |
 | `assert_fct_monthly_revenue_index_base` | Confirms both revenue index fields equal `100` in January 2021. |

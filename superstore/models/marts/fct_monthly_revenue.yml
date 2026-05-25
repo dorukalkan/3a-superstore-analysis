@@ -73,6 +73,11 @@ models:
         tests:
           - not_null
 
+      - name: cpi_index_jan_2021_100
+        description: "Cumulative CPI price-level index normalized so January 2021 equals 100."
+        tests:
+          - not_null
+
       - name: real_revenue_base_month
         description: "Constant-TRY reporting month used for the real revenue metrics."
         tests:

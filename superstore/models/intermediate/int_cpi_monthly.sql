@@ -40,7 +40,11 @@ cpi_metrics as (
         safe_divide(
             indexed.base_cpi_index_2003_100,
             indexed.cpi_index_2003_100
-        ) as inflation_adjustment_factor
+        ) as inflation_adjustment_factor,
+        safe_divide(
+            indexed.cpi_index_2003_100,
+            indexed.base_cpi_index_2003_100
+        ) * 100 as cpi_index_jan_2021_100
     from indexed
     left join cpi as prior_month
         on indexed.cpi_month = date_add(prior_month.cpi_month, interval 1 month)

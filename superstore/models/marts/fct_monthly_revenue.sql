@@ -54,6 +54,7 @@ monthly_revenue_with_cpi as (
         cpi.cpi_mom_rate,
         cpi.cpi_yoy_rate,
         cpi.inflation_adjustment_factor,
+        cpi.cpi_index_jan_2021_100,
         cpi.real_revenue_base_month
     from monthly_revenue
     left join cpi

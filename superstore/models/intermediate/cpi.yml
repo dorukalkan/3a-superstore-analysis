@@ -40,3 +40,8 @@ models:
         description: "Multiplier that converts nominal TRY for the CPI month into January 2021 TRY."
         tests:
           - not_null
+
+      - name: cpi_index_jan_2021_100
+        description: "Cumulative CPI price-level index normalized so January 2021 equals 100."
+        tests:
+          - not_null
