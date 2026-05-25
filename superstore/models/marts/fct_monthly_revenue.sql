@@ -59,7 +59,33 @@ monthly_revenue_with_cpi as (
     left join cpi
         on monthly_revenue.order_month = cpi.cpi_month
 
+),
+
+monthly_revenue_with_indexes as (
+
+    select
+        monthly_revenue_with_cpi.*,
+        safe_divide(
+            nominal_revenue,
+            max(
+                case
+                    when order_month = date '2021-01-01'
+                    then nominal_revenue
+                end
+            ) over ()
+        ) * 100 as nominal_revenue_index_jan_2021_100,
+        safe_divide(
+            real_revenue,
+            max(
+                case
+                    when order_month = date '2021-01-01'
+                    then real_revenue
+                end
+            ) over ()
+        ) * 100 as real_revenue_index_jan_2021_100
+    from monthly_revenue_with_cpi
+
 )
 
 select *
-from monthly_revenue_with_cpi
+from monthly_revenue_with_indexes

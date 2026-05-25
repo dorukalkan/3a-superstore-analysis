@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: int_cpi_monthly
-    description: "Monthly CPI metrics and July 2023 constant-TRY adjustment factors at one row per CPI month."
+    description: "Monthly CPI metrics and January 2021 constant-TRY adjustment factors at one row per CPI month."
     columns:
       - name: cpi_month
         description: "First day of the CPI observation month."
@@ -32,11 +32,11 @@ models:
           - not_null
 
       - name: base_cpi_index_2003_100
-        description: "CPI index level for the July 2023 real revenue base month."
+        description: "CPI index level for the January 2021 real revenue base month."
         tests:
           - not_null
 
       - name: inflation_adjustment_factor
-        description: "Multiplier that converts nominal TRY for the CPI month into July 2023 TRY."
+        description: "Multiplier that converts nominal TRY for the CPI month into January 2021 TRY."
         tests:
           - not_null

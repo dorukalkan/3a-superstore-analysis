@@ -33,7 +33,7 @@ DEFAULT_START_DATE = "01-01-2020"
 DEFAULT_END_DATE = "31-08-2023"
 REQUIRED_START_MONTH = date(2021, 1, 1)
 REQUIRED_END_MONTH = date(2023, 8, 1)
-REAL_REVENUE_BASE_MONTH = date(2023, 7, 1)
+REAL_REVENUE_BASE_MONTH = date(2021, 1, 1)
 
 
 @dataclass(frozen=True)
@@ -203,7 +203,7 @@ def validate_rows(rows: list[CpiRow]) -> None:
     """Validate that fetched CPI data is complete enough for this analysis.
 
     The sales dataset spans 2021-01 through 2023-08. We require CPI coverage for
-    that full period and the selected real-revenue base month, July 2023. August
+    that full period and the selected real-revenue base month, January 2021. August
     remains required because the source sales data includes a partial August.
     """
     if not rows:

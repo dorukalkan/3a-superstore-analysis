@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: fct_monthly_revenue
-    description: "Monthly topline revenue fact with nominal TRY and July 2023 constant-TRY metrics."
+    description: "Monthly topline revenue fact with nominal TRY, January 2021 constant-TRY metrics, and January 2021-based revenue indexes."
     columns:
       - name: order_month
         description: "First day of the sales month."
@@ -47,15 +47,15 @@ models:
         description: "Units sold divided by order count."
 
       - name: real_revenue
-        description: "Monthly header revenue expressed in July 2023 TRY."
+        description: "Monthly header revenue expressed in January 2021 TRY."
         tests:
           - not_null
 
       - name: line_real_revenue
-        description: "Monthly line revenue expressed in July 2023 TRY."
+        description: "Monthly line revenue expressed in January 2021 TRY."
 
       - name: real_avg_order_value
-        description: "Monthly average order value expressed in July 2023 TRY."
+        description: "Monthly average order value expressed in January 2021 TRY."
 
       - name: cpi_index_2003_100
         description: "CPI index level matched to the sales month."
@@ -69,11 +69,21 @@ models:
         description: "Year-over-year CPI change for the sales month."
 
       - name: inflation_adjustment_factor
-        description: "Multiplier used to convert monthly nominal TRY into July 2023 TRY."
+        description: "Multiplier used to convert monthly nominal TRY into January 2021 TRY."
         tests:
           - not_null
 
       - name: real_revenue_base_month
         description: "Constant-TRY reporting month used for the real revenue metrics."
+        tests:
+          - not_null
+
+      - name: nominal_revenue_index_jan_2021_100
+        description: "Nominal monthly revenue indexed to January 2021 revenue = 100 for growth charts."
+        tests:
+          - not_null
+
+      - name: real_revenue_index_jan_2021_100
+        description: "January 2021 TRY real monthly revenue indexed to January 2021 real revenue = 100 for growth charts."
         tests:
           - not_null

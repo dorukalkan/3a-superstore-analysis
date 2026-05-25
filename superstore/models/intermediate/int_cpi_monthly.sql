@@ -13,7 +13,7 @@ indexed as (
         cpi.*,
         max(
             case
-                when cpi_month = date '2023-07-01'
+                when cpi_month = date '2021-01-01'
                 then cpi_index_2003_100
             end
         ) over () as base_cpi_index_2003_100
@@ -35,7 +35,7 @@ cpi_metrics as (
             indexed.cpi_index_2003_100,
             prior_year.cpi_index_2003_100
         ) - 1 as cpi_yoy_rate,
-        date '2023-07-01' as real_revenue_base_month,
+        date '2021-01-01' as real_revenue_base_month,
         indexed.base_cpi_index_2003_100,
         safe_divide(
             indexed.base_cpi_index_2003_100,
