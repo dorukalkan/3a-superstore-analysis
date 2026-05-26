@@ -1,0 +1,129 @@
+version: 2
+
+models:
+  - name: int_order_line_pricing
+    description: "Order-line pricing intermediate with paid/effective unit price, source unit price diagnostics, and CPI-adjusted effective prices."
+    columns:
+      - name: order_detail_id
+        description: "Unique order line identifier."
+        tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        description: "Order header identifier."
+        tests:
+          - not_null
+
+      - name: item_id
+        description: "Product item identifier."
+        tests:
+          - not_null
+
+      - name: item_code
+        description: "Product item code."
+        tests:
+          - not_null
+
+      - name: order_date
+        description: "Order date from the order header."
+        tests:
+          - not_null
+
+      - name: order_month
+        description: "First day of the order month, used to join monthly CPI."
+        tests:
+          - not_null
+
+      - name: amount
+        description: "Line item quantity."
+        tests:
+          - not_null
+
+      - name: source_unit_price
+        description: "Raw unit_price value from the order detail source, kept as a source diagnostic."
+        tests:
+          - not_null
+
+      - name: paid_line_amount
+        description: "Paid/revenue line amount from total_price."
+        tests:
+          - not_null
+
+      - name: gross_line_amount
+        description: "Source unit_price multiplied by quantity."
+        tests:
+          - not_null
+
+      - name: effective_paid_unit_price
+        description: "Paid line amount divided by quantity."
+        tests:
+          - not_null
+
+      - name: real_effective_paid_unit_price
+        description: "Effective paid unit price expressed in January 2021 TRY."
+        tests:
+          - not_null
+
+      - name: line_price_variance_amount
+        description: "Gross line amount minus paid line amount."
+        tests:
+          - not_null
+
+      - name: line_price_variance_rate
+        description: "Line price variance divided by gross line amount."
+        tests:
+          - not_null
+
+      - name: cpi_index_jan_2021_100
+        description: "CPI price-level index normalized so January 2021 equals 100."
+        tests:
+          - not_null
+
+      - name: inflation_adjustment_factor
+        description: "Multiplier that converts nominal prices into January 2021 TRY."
+        tests:
+          - not_null
+
+  - name: int_item_month_pricing
+    description: "Item-month pricing intermediate used to compare endpoint item-level effective paid prices."
+    columns:
+      - name: item_id
+        description: "Product item identifier."
+        tests:
+          - not_null
+
+      - name: item_code
+        description: "Product item code."
+        tests:
+          - not_null
+
+      - name: order_month
+        description: "First day of the sales month."
+        tests:
+          - not_null
+
+      - name: month_label
+        description: "YYYY-MM display label."
+        tests:
+          - not_null
+
+      - name: line_count
+        description: "Number of order detail rows for the item in the month."
+        tests:
+          - not_null
+
+      - name: units_sold
+        description: "Total units sold for the item in the month."
+        tests:
+          - not_null
+
+      - name: median_effective_paid_unit_price
+        description: "Median effective paid unit price for the item in the month."
+        tests:
+          - not_null
+
+      - name: median_real_effective_paid_unit_price
+        description: "Median effective paid unit price in January 2021 TRY."
+        tests:
+          - not_null
