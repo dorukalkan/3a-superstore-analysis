@@ -12,16 +12,16 @@ revenue metric. Real revenue comes from ratios between CPI index levels.
 
 The current path is:
 
-```text
-evds_cpi_monthly seed
-        |
-        v
-stg_cpi_monthly
-        |
-        v
-int_cpi_monthly ---------+
-                         |
-int_order_revenue -------+--> fct_monthly_revenue
+```mermaid
+flowchart TD
+    seed[evds_cpi_monthly seed] --> stg[stg_cpi_monthly]
+    stg --> cpi[int_cpi_monthly]
+    stg_orders[stg_orders] --> orders[int_order_revenue]
+    stg_order_details[stg_order_details] --> orders
+    orders[int_order_revenue] --> fact[fct_monthly_revenue]
+    cpi --> fact
+    fact --> trend[mart_revenue_trend_monthly]
+    fact --> kpis[mart_revenue_story_kpis]
 ```
 
 ## Why Monthly
@@ -44,6 +44,11 @@ in the dataset, so indexed growth charts can start nominal and real revenue at
 the same value and then show how they diverge over time. The sales data includes
 only a partial August 2023, so August remains in the mart but should not be
 treated as a full-month trend comparison without that caveat.
+
+For dashboard presentation, the focused mart window is January 2021 through
+June 2023. June 2023 is the default comparison month for the headline story.
+This avoids using the late-2023 months as headline trend endpoints while still
+leaving the full monthly fact available for deeper analysis.
 
 ## `stg_cpi_monthly`
 
@@ -221,6 +226,66 @@ them:
 | Growth indexes | `nominal_revenue_index_jan_2021_100`, `real_revenue_index_jan_2021_100` |
 | CPI context | `cpi_index_2003_100`, `cpi_index_jan_2021_100`, `cpi_mom_rate`, `cpi_yoy_rate`, `inflation_adjustment_factor`, `real_revenue_base_month` |
 
+## Dashboard Marts
+
+The BI-facing marts are intentionally narrow. They are built from
+`fct_monthly_revenue` so the BI tool can import ready-to-chart fields without
+recreating CPI, index, or endpoint-change calculations.
+
+### `mart_revenue_trend_monthly`
+
+`mart_revenue_trend_monthly` is the monthly trend table for the main dashboard
+line chart. Its grain is one row per `order_month`, limited to January 2021
+through June 2023.
+
+The mart contains:
+
+| Column | Meaning |
+| --- | --- |
+| `order_month` | First day of the sales month. |
+| `month_label` | `YYYY-MM` display label for chart axes. |
+| `nominal_revenue` | Monthly nominal TRY revenue. |
+| `real_revenue` | Monthly revenue in January 2021 TRY. |
+| `nominal_revenue_index_jan_2021_100` | Nominal revenue indexed to January 2021 = 100. |
+| `real_revenue_index_jan_2021_100` | Real revenue indexed to January 2021 = 100. |
+| `cpi_index_jan_2021_100` | CPI price-level index normalized to January 2021 = 100. |
+
+Use this mart for the core chart comparing nominal revenue growth, real revenue
+growth, and CPI on the same January 2021 = 100 scale.
+
+### `mart_revenue_story_kpis`
+
+`mart_revenue_story_kpis` is the endpoint-comparison table for dashboard KPI
+cards. Its grain is one row per `metric_key`, comparing January 2021 against
+June 2023.
+
+The mart contains six metrics:
+
+| Metric key | Meaning |
+| --- | --- |
+| `nominal_revenue` | Nominal monthly revenue. |
+| `cpi_index` | CPI price-level index. |
+| `real_revenue` | CPI-adjusted monthly revenue. |
+| `order_count` | Monthly order count. |
+| `units_sold` | Monthly units sold. |
+| `customer_count` | Monthly distinct customer count. |
+
+For each metric, the mart exposes:
+
+| Column | Meaning |
+| --- | --- |
+| `base_month` | Fixed at `2021-01-01`. |
+| `comparison_month` | Fixed at `2023-06-01`. |
+| `base_value` | Metric value in January 2021. |
+| `comparison_value` | Metric value in June 2023. |
+| `absolute_change` | `comparison_value - base_value`. |
+| `pct_change` | Percent change from the base value. |
+| `index_jan_2021_100` | June 2023 value indexed to January 2021 = 100. |
+
+Use this mart for KPI cards or compact bars that show the main interpretation:
+nominal revenue increased, CPI increased more, real revenue declined, and the
+volume/customer metrics did not materially increase.
+
 ## Example Queries
 
 The snippets below use dbt `ref()` calls. Use them in dbt SQL or replace the
@@ -279,6 +344,35 @@ where order_month = date '2021-01-01'
 For January 2021, nominal and real revenue should match because the adjustment
 factor is `1`.
 
+Query the BI-ready trend mart:
+
+```sql
+select
+    order_month,
+    month_label,
+    nominal_revenue_index_jan_2021_100,
+    real_revenue_index_jan_2021_100,
+    cpi_index_jan_2021_100
+from {{ ref('mart_revenue_trend_monthly') }}
+order by order_month
+```
+
+Query the BI-ready KPI mart:
+
+```sql
+select
+    metric_key,
+    base_month,
+    comparison_month,
+    base_value,
+    comparison_value,
+    absolute_change,
+    pct_change,
+    index_jan_2021_100
+from {{ ref('mart_revenue_story_kpis') }}
+order by metric_key
+```
+
 ## Tests
 
 The CPI path uses dbt schema tests and singular SQL tests.
@@ -290,6 +384,7 @@ Schema tests check the basic table contracts:
 - CPI index, source code, base index, and adjustment factor are present.
 - `fct_monthly_revenue` has one row per `order_month`.
 - required monthly revenue and CPI fields are not null in the mart.
+- dashboard mart grains and required chart fields are tested.
 
 The singular tests check the calculations and expected scenarios:
 
@@ -305,6 +400,10 @@ The singular tests check the calculations and expected scenarios:
 | `assert_fct_monthly_revenue_reconciles` | Confirms monthly order counts and nominal revenue still reconcile to `int_order_revenue`. |
 | `assert_fct_monthly_revenue_real_revenue_math` | Confirms `real_revenue` equals nominal revenue times the CPI factor. |
 | `assert_fct_monthly_revenue_cpi_scenarios` | Confirms January 2021 stays unchanged and July 2023 deflates backward. |
+| `assert_mart_revenue_trend_monthly_window` | Confirms the trend mart contains every month from January 2021 through June 2023 and no months outside that window. |
+| `assert_mart_revenue_story_kpis_expected_metrics` | Confirms the KPI mart contains the six dashboard metrics. |
+| `assert_mart_revenue_story_kpis_window` | Confirms the KPI mart compares January 2021 to June 2023. |
+| `assert_mart_revenue_story_kpis_math` | Confirms absolute change, percent change, and index calculations are internally consistent. |
 
 These tests focus on the mistakes that would make the chart misleading:
 
@@ -313,3 +412,4 @@ These tests focus on the mistakes that would make the chart misleading:
 - wrong CPI ratio logic
 - missing CPI joins
 - monthly nominal revenue drifting away from the order-level revenue source
+- dashboard marts using the wrong trend window or endpoint comparison months
