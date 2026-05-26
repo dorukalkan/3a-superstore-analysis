@@ -40,44 +40,6 @@ models:
         tests:
           - not_null
 
-  - name: mart_volume_stability_monthly
-    description: "Dashboard-ready long mart for volume stability heatmaps across orders, units sold, and customers from January 2021 through June 2023."
-    columns:
-      - name: order_month
-        description: "First day of the sales month."
-        tests:
-          - not_null
-
-      - name: month_label
-        description: "YYYY-MM month label for dashboard axes."
-        tests:
-          - not_null
-
-      - name: metric_key
-        description: "Stable metric identifier."
-        tests:
-          - not_null
-
-      - name: actual_value
-        description: "Monthly observed value for the metric."
-        tests:
-          - not_null
-
-      - name: index_jan_2021_100
-        description: "Metric value indexed to January 2021 = 100."
-        tests:
-          - not_null
-
-      - name: index_point_change_vs_base
-        description: "Index-point change from the January 2021 base."
-        tests:
-          - not_null
-
-      - name: pct_change_vs_base
-        description: "Percent change from the January 2021 base."
-        tests:
-          - not_null
-
   - name: mart_revenue_story_kpis
     description: "Dashboard-ready KPI mart comparing January 2021 against June 2023 for revenue, CPI, and volume metrics."
     columns:
