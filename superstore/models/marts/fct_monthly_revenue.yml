@@ -1,0 +1,94 @@
+version: 2
+
+models:
+  - name: fct_monthly_revenue
+    description: "Monthly topline revenue fact with nominal TRY, January 2021 constant-TRY metrics, and January 2021-based revenue indexes."
+    columns:
+      - name: order_month
+        description: "First day of the sales month."
+        tests:
+          - not_null
+          - unique
+
+      - name: order_year
+        description: "Calendar year of the sales month."
+
+      - name: order_quarter
+        description: "Calendar quarter of the sales month."
+
+      - name: order_count
+        description: "Number of orders in the sales month."
+        tests:
+          - not_null
+
+      - name: customer_count
+        description: "Number of distinct customers in the sales month."
+
+      - name: nominal_revenue
+        description: "Nominal TRY monthly revenue from order headers."
+        tests:
+          - not_null
+
+      - name: line_nominal_revenue
+        description: "Nominal TRY monthly revenue summed from order lines."
+
+      - name: units_sold
+        description: "Total item units sold in the sales month."
+        tests:
+          - not_null
+
+      - name: line_item_count
+        description: "Total order line count in the sales month."
+
+      - name: nominal_avg_order_value
+        description: "Nominal monthly revenue divided by order count."
+
+      - name: units_per_order
+        description: "Units sold divided by order count."
+
+      - name: real_revenue
+        description: "Monthly header revenue expressed in January 2021 TRY."
+        tests:
+          - not_null
+
+      - name: line_real_revenue
+        description: "Monthly line revenue expressed in January 2021 TRY."
+
+      - name: real_avg_order_value
+        description: "Monthly average order value expressed in January 2021 TRY."
+
+      - name: cpi_index_2003_100
+        description: "CPI index level matched to the sales month."
+        tests:
+          - not_null
+
+      - name: cpi_mom_rate
+        description: "Month-over-month CPI change for the sales month."
+
+      - name: cpi_yoy_rate
+        description: "Year-over-year CPI change for the sales month."
+
+      - name: inflation_adjustment_factor
+        description: "Multiplier used to convert monthly nominal TRY into January 2021 TRY."
+        tests:
+          - not_null
+
+      - name: cpi_index_jan_2021_100
+        description: "Cumulative CPI price-level index normalized so January 2021 equals 100."
+        tests:
+          - not_null
+
+      - name: real_revenue_base_month
+        description: "Constant-TRY reporting month used for the real revenue metrics."
+        tests:
+          - not_null
+
+      - name: nominal_revenue_index_jan_2021_100
+        description: "Nominal monthly revenue indexed to January 2021 revenue = 100 for growth charts."
+        tests:
+          - not_null
+
+      - name: real_revenue_index_jan_2021_100
+        description: "January 2021 TRY real monthly revenue indexed to January 2021 real revenue = 100 for growth charts."
+        tests:
+          - not_null

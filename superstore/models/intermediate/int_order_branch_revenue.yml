@@ -70,9 +70,3 @@ models:
 
       - name: line_item_count
         description: "Number of line items in the order."
-
-      - name: revenue_reconciliation_diff
-        description: "Difference between header revenue and summed line revenue."
-
-      - name: has_revenue_reconciliation_issue
-        description: "True when the absolute revenue reconciliation difference is greater than 0.01 TRY."

@@ -1,0 +1,85 @@
+version: 2
+
+models:
+  - name: mart_revenue_trend_monthly
+    description: "Dashboard-ready monthly trend mart for nominal revenue, real revenue, and CPI indexes from January 2021 through June 2023."
+    columns:
+      - name: order_month
+        description: "First day of the sales month."
+        tests:
+          - not_null
+          - unique
+
+      - name: month_label
+        description: "YYYY-MM month label for dashboard axes."
+        tests:
+          - not_null
+
+      - name: nominal_revenue
+        description: "Nominal TRY monthly revenue from order headers."
+        tests:
+          - not_null
+
+      - name: real_revenue
+        description: "Monthly header revenue expressed in January 2021 TRY."
+        tests:
+          - not_null
+
+      - name: nominal_revenue_index_jan_2021_100
+        description: "Nominal monthly revenue indexed to January 2021 revenue = 100."
+        tests:
+          - not_null
+
+      - name: real_revenue_index_jan_2021_100
+        description: "Real monthly revenue indexed to January 2021 real revenue = 100."
+        tests:
+          - not_null
+
+      - name: cpi_index_jan_2021_100
+        description: "CPI price-level index normalized so January 2021 equals 100."
+        tests:
+          - not_null
+
+  - name: mart_revenue_story_kpis
+    description: "Dashboard-ready KPI mart comparing January 2021 against June 2023 for revenue, CPI, and volume metrics."
+    columns:
+      - name: metric_key
+        description: "Stable metric identifier."
+        tests:
+          - not_null
+          - unique
+
+      - name: base_month
+        description: "Base month for the KPI comparison, fixed at January 2021."
+        tests:
+          - not_null
+
+      - name: comparison_month
+        description: "Comparison month for the KPI comparison, fixed at June 2023."
+        tests:
+          - not_null
+
+      - name: base_value
+        description: "Metric value in January 2021."
+        tests:
+          - not_null
+
+      - name: comparison_value
+        description: "Metric value in June 2023."
+        tests:
+          - not_null
+
+      - name: absolute_change
+        description: "Absolute metric change from January 2021 to June 2023."
+        tests:
+          - not_null
+
+      - name: pct_change
+        description: "Percent metric change from January 2021 to June 2023."
+        tests:
+          - not_null
+
+      - name: index_jan_2021_100
+        description: "June 2023 metric value indexed to January 2021 = 100."
+        tests:
+          - not_null

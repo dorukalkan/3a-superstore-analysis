@@ -23,3 +23,6 @@ superstore/.user.yml
 
 # logs
 logs/
+
+# add exports
+exports/

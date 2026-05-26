@@ -38,8 +38,7 @@ daily_branch_revenue as (
         sum(order_revenue.units_sold) as units_sold,
         sum(order_revenue.line_item_count) as line_item_count,
         safe_divide(sum(order_revenue.nominal_order_revenue), count(*)) as avg_order_value,
-        safe_divide(sum(order_revenue.units_sold), count(*)) as units_per_order,
-        sum(abs(order_revenue.revenue_reconciliation_diff)) as revenue_reconciliation_abs_diff
+        safe_divide(sum(order_revenue.units_sold), count(*)) as units_per_order
     from order_revenue
     left join branches
         on order_revenue.branch_id = branches.branch_id
