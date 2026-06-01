@@ -107,3 +107,71 @@ models:
         description: "Share of eligible items whose median effective paid unit price increased."
         tests:
           - not_null
+
+  - name: mart_product_category_price_trend_monthly
+    description: "Dashboard-ready monthly category price trend mart for ranking top-level categories by effective paid price increase from January 2021 through June 2023."
+    columns:
+      - name: order_month
+        description: "First day of the sales month."
+        tests:
+          - not_null
+
+      - name: month_label
+        description: "YYYY-MM display label."
+        tests:
+          - not_null
+
+      - name: category1
+        description: "Top-level product category."
+        tests:
+          - not_null
+
+      - name: item_count
+        description: "Number of distinct priced items in the category and month."
+        tests:
+          - not_null
+
+      - name: line_count
+        description: "Number of order detail rows represented by the category item-month prices."
+        tests:
+          - not_null
+
+      - name: units_sold
+        description: "Total units sold across category item-month prices."
+        tests:
+          - not_null
+
+      - name: median_effective_paid_unit_price
+        description: "Item-weighted category median of item-month median effective paid unit prices."
+        tests:
+          - not_null
+
+      - name: median_real_effective_paid_unit_price
+        description: "Item-weighted category median of item-month median effective paid unit prices in January 2021 TRY."
+        tests:
+          - not_null
+
+      - name: cpi_index_jan_2021_100
+        description: "CPI price-level index normalized so January 2021 equals 100."
+        tests:
+          - not_null
+
+      - name: median_effective_paid_price_index_jan_2021_100
+        description: "Category median effective paid unit price indexed to January 2021 = 100."
+        tests:
+          - not_null
+
+      - name: median_real_effective_paid_price_index_jan_2021_100
+        description: "Category median real effective paid unit price indexed to January 2021 = 100."
+        tests:
+          - not_null
+
+      - name: median_effective_paid_price_pct_change_since_jan_2021
+        description: "Category median effective paid unit price percent change since January 2021."
+        tests:
+          - not_null
+
+      - name: price_increase_rank
+        description: "Monthly rank of categories by nominal effective paid price percent change since January 2021."
+        tests:
+          - not_null
