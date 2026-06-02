@@ -1,0 +1,196 @@
+version: 2
+
+models:
+  - name: mart_product_price_trend_monthly
+    description: "Dashboard-ready monthly effective paid product price trend from January 2021 through June 2023."
+    columns:
+      - name: order_month
+        description: "First day of the sales month."
+        tests:
+          - not_null
+          - unique
+
+      - name: month_label
+        description: "YYYY-MM display label."
+        tests:
+          - not_null
+
+      - name: line_count
+        description: "Number of order detail rows included in the monthly price trend."
+        tests:
+          - not_null
+
+      - name: item_count
+        description: "Number of distinct items sold in the month."
+        tests:
+          - not_null
+
+      - name: units_sold
+        description: "Total units sold in the month."
+        tests:
+          - not_null
+
+      - name: median_effective_paid_unit_price
+        description: "Median realized unit price, calculated from paid line amount divided by quantity."
+        tests:
+          - not_null
+
+      - name: median_real_effective_paid_unit_price
+        description: "Median realized unit price in January 2021 TRY."
+        tests:
+          - not_null
+
+      - name: median_source_unit_price
+        description: "Median raw source unit_price value, kept as a source diagnostic."
+        tests:
+          - not_null
+
+      - name: cpi_index_jan_2021_100
+        description: "CPI price-level index normalized so January 2021 equals 100."
+        tests:
+          - not_null
+
+      - name: median_effective_paid_price_index_jan_2021_100
+        description: "Median effective paid unit price indexed to January 2021 = 100."
+        tests:
+          - not_null
+
+      - name: median_real_effective_paid_price_index_jan_2021_100
+        description: "Median real effective paid unit price indexed to January 2021 = 100."
+        tests:
+          - not_null
+
+      - name: median_source_unit_price_index_jan_2021_100
+        description: "Median raw source unit_price indexed to January 2021 = 100."
+        tests:
+          - not_null
+
+  - name: mart_product_price_story_kpis
+    description: "One-row dashboard KPI mart comparing product effective paid prices between January 2021 and June 2023."
+    columns:
+      - name: base_month
+        description: "Base month for the product price comparison, fixed at January 2021."
+        tests:
+          - not_null
+
+      - name: comparison_month
+        description: "Comparison month for the product price comparison, fixed at June 2023."
+        tests:
+          - not_null
+
+      - name: median_effective_paid_unit_price_pct_change
+        description: "Percent change in portfolio median effective paid unit price."
+        tests:
+          - not_null
+
+      - name: median_real_effective_paid_unit_price_pct_change
+        description: "Percent change in portfolio median effective paid unit price after CPI adjustment."
+        tests:
+          - not_null
+
+      - name: cpi_pct_change
+        description: "Percent change in CPI index over the same endpoint period."
+        tests:
+          - not_null
+
+      - name: eligible_item_count
+        description: "Items present in both endpoint months with at least five line observations in each month."
+        tests:
+          - not_null
+
+      - name: items_with_increased_effective_paid_price
+        description: "Eligible items whose median effective paid unit price increased from January 2021 to June 2023."
+        tests:
+          - not_null
+
+      - name: items_with_increased_effective_paid_price_pct
+        description: "Share of eligible items whose median effective paid unit price increased."
+        tests:
+          - not_null
+
+  - name: mart_product_category_price_trend_monthly
+    description: "Dashboard-ready monthly category price trend mart for ranking top-level categories by effective paid price increase from January 2021 through June 2023."
+    columns:
+      - name: order_month
+        description: "First day of the sales month."
+        tests:
+          - not_null
+
+      - name: month_label
+        description: "YYYY-MM display label."
+        tests:
+          - not_null
+
+      - name: category1
+        description: "Top-level product category."
+        tests:
+          - not_null
+
+      - name: item_count
+        description: "Number of distinct priced items in the category and month."
+        tests:
+          - not_null
+
+      - name: line_count
+        description: "Number of order detail rows represented by the category item-month prices."
+        tests:
+          - not_null
+
+      - name: units_sold
+        description: "Total units sold across category item-month prices."
+        tests:
+          - not_null
+
+      - name: median_effective_paid_unit_price
+        description: "Item-weighted category median of item-month median effective paid unit prices."
+        tests:
+          - not_null
+
+      - name: median_real_effective_paid_unit_price
+        description: "Item-weighted category median of item-month median effective paid unit prices in January 2021 TRY."
+        tests:
+          - not_null
+
+      - name: cpi_index_jan_2021_100
+        description: "CPI price-level index normalized so January 2021 equals 100."
+        tests:
+          - not_null
+
+      - name: median_effective_paid_price_index_jan_2021_100
+        description: "Category median effective paid unit price indexed to January 2021 = 100."
+        tests:
+          - not_null
+
+      - name: median_real_effective_paid_price_index_jan_2021_100
+        description: "Category median real effective paid unit price indexed to January 2021 = 100."
+        tests:
+          - not_null
+
+      - name: median_effective_paid_price_pct_change_since_jan_2021
+        description: "Category median effective paid unit price percent change since January 2021."
+        tests:
+          - not_null
+
+      - name: price_increase_rank
+        description: "Monthly rank of categories by nominal effective paid price percent change since January 2021."
+        tests:
+          - not_null
+
+  - name: mart_product_category_price_increase_bar
+    description: "Dashboard-ready category bar chart mart with one row per top-level category for June 2023 price increase since January 2021."
+    columns:
+      - name: category1
+        description: "Top-level product category."
+        tests:
+          - not_null
+          - unique
+
+      - name: median_effective_paid_price_pct_change_since_jan_2021
+        description: "June 2023 category median effective paid unit price percent change since January 2021."
+        tests:
+          - not_null
+
+      - name: price_increase_rank
+        description: "Rank of categories by June 2023 nominal effective paid price percent change since January 2021."
+        tests:
+          - not_null

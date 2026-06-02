@@ -22,6 +22,13 @@ flowchart TD
     cpi --> fact
     fact --> trend[mart_revenue_trend_monthly]
     fact --> kpis[mart_revenue_story_kpis]
+    stg_orders --> pricing[int_order_line_pricing]
+    stg_order_details --> pricing
+    cpi --> pricing
+    pricing --> item_month[int_item_month_pricing]
+    pricing --> price_trend[mart_product_price_trend_monthly]
+    item_month --> price_kpis[mart_product_price_story_kpis]
+    price_trend --> price_kpis
 ```
 
 ## Why Monthly
@@ -286,6 +293,101 @@ Use this mart for KPI cards or compact bars that show the main interpretation:
 nominal revenue increased, CPI increased more, real revenue declined, and the
 volume/customer metrics did not materially increase.
 
+## Product Price Marts
+
+The product price path extends the revenue story by checking whether realized
+item prices moved with inflation. It uses order lines because item prices are
+recorded at line grain.
+
+The important source distinction is:
+
+- `total_price` reconciles to `stg_orders.total_basket` when summed by order,
+  so it is the paid/revenue line amount.
+- `unit_price * amount` does not reconcile to the paid basket. The raw
+  `unit_price` is kept as a source diagnostic, but it is not the primary price
+  measure for the inflation story.
+
+The primary product price metric is:
+
+```text
+effective_paid_unit_price = total_price / amount
+```
+
+The real price metric uses the same CPI factor as revenue:
+
+```text
+real_effective_paid_unit_price =
+    effective_paid_unit_price * inflation_adjustment_factor
+```
+
+### `int_order_line_pricing`
+
+`int_order_line_pricing` is the line-grain pricing intermediate. It joins
+`stg_order_details` to `stg_orders` and `int_cpi_monthly`.
+
+The model exposes paid/effective prices plus source diagnostics:
+
+| Column | Meaning |
+| --- | --- |
+| `order_detail_id` | Order line identifier. |
+| `order_month` | First day of the order month. |
+| `amount` | Quantity purchased on the line. |
+| `source_unit_price` | Raw source `unit_price`, retained for diagnostics. |
+| `paid_line_amount` | Paid line amount from `total_price`. |
+| `gross_line_amount` | `source_unit_price * amount`. |
+| `effective_paid_unit_price` | `paid_line_amount / amount`. |
+| `real_effective_paid_unit_price` | Effective paid unit price in January 2021 TRY. |
+| `line_price_variance_amount` | `gross_line_amount - paid_line_amount`. |
+| `line_price_variance_rate` | Line variance divided by gross line amount. |
+
+### `int_item_month_pricing`
+
+`int_item_month_pricing` aggregates line pricing to one row per `item_id` and
+`order_month`. It is used to compare the same items across endpoint months.
+
+The endpoint KPI mart treats an item as eligible when it appears in both
+January 2021 and June 2023 with at least five line observations in each month.
+
+### `mart_product_price_trend_monthly`
+
+`mart_product_price_trend_monthly` is the monthly product price trend mart for
+dashboard and notebook charts. Its grain is one row per month, limited to
+January 2021 through June 2023.
+
+Main chart fields:
+
+| Column | Meaning |
+| --- | --- |
+| `order_month` | First day of the sales month. |
+| `month_label` | `YYYY-MM` display label. |
+| `median_effective_paid_unit_price` | Portfolio median realized unit price. |
+| `median_real_effective_paid_unit_price` | Portfolio median realized unit price in January 2021 TRY. |
+| `median_effective_paid_price_index_jan_2021_100` | Realized unit price indexed to January 2021 = 100. |
+| `median_real_effective_paid_price_index_jan_2021_100` | Realized real unit price indexed to January 2021 = 100. |
+| `median_source_unit_price_index_jan_2021_100` | Raw source unit price index, retained as a diagnostic. |
+| `cpi_index_jan_2021_100` | CPI price-level index normalized to January 2021 = 100. |
+
+Use this mart to compare realized item price inflation against CPI.
+
+### `mart_product_price_story_kpis`
+
+`mart_product_price_story_kpis` is a one-row endpoint KPI mart comparing
+January 2021 against June 2023.
+
+It includes:
+
+| Column | Meaning |
+| --- | --- |
+| `median_effective_paid_unit_price_pct_change` | Portfolio median realized unit price change. |
+| `median_real_effective_paid_unit_price_pct_change` | Real realized unit price change. |
+| `cpi_pct_change` | CPI change over the same period. |
+| `eligible_item_count` | Items with enough observations in both endpoint months. |
+| `items_with_increased_effective_paid_price` | Eligible items whose realized unit price increased. |
+| `items_with_increased_effective_paid_price_pct` | Share of eligible items with increased realized unit price. |
+
+Use this mart for product price KPI cards that support the revenue argument:
+realized item prices rose broadly, while CPI-adjusted realized prices did not.
+
 ## Example Queries
 
 The snippets below use dbt `ref()` calls. Use them in dbt SQL or replace the
@@ -373,6 +475,33 @@ from {{ ref('mart_revenue_story_kpis') }}
 order by metric_key
 ```
 
+Query the product price trend mart:
+
+```sql
+select
+    order_month,
+    month_label,
+    median_effective_paid_price_index_jan_2021_100,
+    median_real_effective_paid_price_index_jan_2021_100,
+    cpi_index_jan_2021_100
+from {{ ref('mart_product_price_trend_monthly') }}
+order by order_month
+```
+
+Query the product price KPI mart:
+
+```sql
+select
+    base_month,
+    comparison_month,
+    median_effective_paid_unit_price_pct_change,
+    median_real_effective_paid_unit_price_pct_change,
+    cpi_pct_change,
+    eligible_item_count,
+    items_with_increased_effective_paid_price_pct
+from {{ ref('mart_product_price_story_kpis') }}
+```
+
 ## Tests
 
 The CPI path uses dbt schema tests and singular SQL tests.
@@ -404,6 +533,13 @@ The singular tests check the calculations and expected scenarios:
 | `assert_mart_revenue_story_kpis_expected_metrics` | Confirms the KPI mart contains the six dashboard metrics. |
 | `assert_mart_revenue_story_kpis_window` | Confirms the KPI mart compares January 2021 to June 2023. |
 | `assert_mart_revenue_story_kpis_math` | Confirms absolute change, percent change, and index calculations are internally consistent. |
+| `assert_int_order_line_pricing_effective_price_math` | Confirms effective paid unit price equals paid line amount divided by quantity. |
+| `assert_int_order_line_pricing_positive_prices` | Confirms modeled pricing rows have positive quantities and prices. |
+| `assert_int_item_month_pricing_grain` | Confirms item-month pricing has one row per item and month. |
+| `assert_mart_product_price_trend_monthly_window` | Confirms the product price trend mart uses January 2021 through June 2023. |
+| `assert_mart_product_price_trend_monthly_base_indexes` | Confirms product price indexes equal `100` in January 2021. |
+| `assert_mart_product_price_story_kpis_window` | Confirms product price KPIs compare January 2021 to June 2023. |
+| `assert_mart_product_price_story_kpis_math` | Confirms product price KPI percent changes and item-increase share calculations. |
 
 These tests focus on the mistakes that would make the chart misleading:
 
@@ -413,3 +549,4 @@ These tests focus on the mistakes that would make the chart misleading:
 - missing CPI joins
 - monthly nominal revenue drifting away from the order-level revenue source
 - dashboard marts using the wrong trend window or endpoint comparison months
+- product price marts using the wrong paid-price formula or endpoint months
