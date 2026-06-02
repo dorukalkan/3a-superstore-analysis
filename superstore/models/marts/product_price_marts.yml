@@ -175,3 +175,22 @@ models:
         description: "Monthly rank of categories by nominal effective paid price percent change since January 2021."
         tests:
           - not_null
+
+  - name: mart_product_category_price_increase_bar
+    description: "Dashboard-ready category bar chart mart with one row per top-level category for June 2023 price increase since January 2021."
+    columns:
+      - name: category1
+        description: "Top-level product category."
+        tests:
+          - not_null
+          - unique
+
+      - name: median_effective_paid_price_pct_change_since_jan_2021
+        description: "June 2023 category median effective paid unit price percent change since January 2021."
+        tests:
+          - not_null
+
+      - name: price_increase_rank
+        description: "Rank of categories by June 2023 nominal effective paid price percent change since January 2021."
+        tests:
+          - not_null
