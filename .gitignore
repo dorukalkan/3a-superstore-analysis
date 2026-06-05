@@ -1,3 +1,4 @@
+# Virtual environment, caches, and checkpoints
 .venv/
 __pycache__/
 .ipynb_checkpoints/
@@ -24,5 +25,8 @@ superstore/.user.yml
 # logs
 logs/
 
-# add exports
+# exports
 exports/
+
+# Zensical build artifacts
+site/
