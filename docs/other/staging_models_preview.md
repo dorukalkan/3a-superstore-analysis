@@ -1,5 +1,6 @@
 ---
 icon: lucide/braces
+title: Staging Models
 ---
 
 # Staging Models Preview

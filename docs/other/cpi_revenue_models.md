@@ -1,5 +1,6 @@
 ---
 icon: lucide/braces
+title: CPI Revenue Models
 ---
 
 # CPI Revenue Models

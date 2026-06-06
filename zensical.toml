@@ -30,7 +30,7 @@ site_author = "Doruk Alkan"
 #site_url = "https://www.example.com/"
 
 repo_url = "https://github.com/dorukalkan/3a-superstore-analysis"
-repo_name = "3A Superstore Analysis"
+repo_name = "3a-superstore-analysis"
 
 # The copyright notice appears in the page footer and can contain an HTML
 # fragment.
@@ -47,10 +47,23 @@ repo_name = "3A Superstore Analysis"
 # can be defined using TOML syntax.
 #
 # Read more: https://zensical.org/docs/setup/navigation/
-# nav = [
-#   { "Get started" = "index.md" },
-#   { "Markdown in 5min" = "markdown.md" },
-# ]
+nav = [
+  "index.md",
+  { "Analyses" = [
+    "analyses/inflation-adjusted-revenue.md",
+  ] },
+  { "About" = [
+    "about/dataset.md",
+    "about/team.md",
+  ] },
+  { "Other" = [
+    "other/cpi_revenue_models.md",
+    "other/staging_models_preview.md",
+    "other/dbt_bq_commands.md",
+    "other/markdown.md",
+    "other/example.md",
+  ] },
+]
 
 # With the "extra_css" option you can add your own CSS styling to customize
 # your Zensical project according to your needs. You can add any number of
@@ -303,6 +316,12 @@ toggle.name = "Switch to light mode"
 # ----------------------------------------------------------------------------
 # The "extra" section contains miscellaneous settings.
 # ----------------------------------------------------------------------------
+[project.extra]
+alternate = [
+  { name = "English", link = "/", lang = "en" },
+  { name = "Türkçe", link = "/tr/", lang = "tr" },
+]
+
 #[[project.extra.social]]
 #icon = "fontawesome/brands/github"
 #link = "https://github.com/user/repo"

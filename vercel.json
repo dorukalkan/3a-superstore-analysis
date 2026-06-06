@@ -2,6 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "python3 -m pip install -r requirements-docs.txt",
-  "buildCommand": "python3 -m zensical build --clean",
+  "buildCommand": "python3 -m zensical build -f zensical.toml --clean && python3 -m zensical build -f zensical.tr.toml --clean",
   "outputDirectory": "site"
 }
