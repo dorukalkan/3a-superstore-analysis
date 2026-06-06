@@ -2,34 +2,18 @@
 
 ## Overview
 
-This project analyzes revenue performance, category trends, and inflation-adjusted business metrics using Power BI dashboards. The objective is to understand how revenue is distributed across regions and product categories, identify key business drivers, and evaluate sales performance over time.
+This project analyzes revenue performance, category trends, using Power BI dashboards. The objective is to understand how revenue is distributed across regions and product categories, identify key business drivers, and evaluate sales performance over time.
 
 ---
 
 # Regional Revenue Overview
 
-![Regional Revenue Overview](./images/regional_revenue_overview.png)
+![Regional Revenue Overview](../assets/Regional_Revenue_Overview.png)
 
 ## Dashboard Objective
 
 The Regional Revenue Overview dashboard provides a high-level view of revenue distribution across regions and product categories. It helps identify the strongest markets, the most profitable categories, and the overall revenue structure of the business.
 
-## KPI Summary
-
-### Nominal Revenue
-Total revenue generated during the analysis period without adjusting for inflation.
-
-### Real Revenue
-Inflation-adjusted revenue that reflects the actual purchasing power of generated sales.
-
-### Average Customer Count
-Average number of customers served throughout the analysis period.
-
-### Average Order Count
-Average number of orders processed during the period.
-
-### Average Units Sold
-Average quantity of products sold across all transactions.
 
 ## Visual Analysis
 
@@ -60,7 +44,10 @@ The horizontal bar chart ranks categories according to their revenue contributio
 
 # Category Performance & Trends
 
-![Category Performance & Trends](./images/category_performance_trends.png)
+
+![Category Performance Trends](../assets/Category_Performance_Trends.png)
+
+
 
 ## Dashboard Objective
 
