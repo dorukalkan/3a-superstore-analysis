@@ -2,6 +2,7 @@
 icon: lucide/shopping-basket
 title: Category Trends Analysis
 description: Category performance & trends
+author: Eda Bilgin
 ---
 
 # Category Performance & Trends

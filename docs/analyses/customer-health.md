@@ -2,6 +2,7 @@
 icon: lucide/shield-plus
 title: Customer Health
 description: Customer churn risk
+author: Yasemen Dündar
 ---
 
 # Customer Health

@@ -6,6 +6,7 @@ docs_dir = "docs-tr"
 site_dir = "site/tr"
 repo_url = "https://github.com/dorukalkan/3a-superstore-analysis"
 repo_name = "3a-superstore-analysis"
+extra_css = ["stylesheets/extra.css"]
 
 nav = [
   "index.md",
@@ -26,6 +27,7 @@ alternate = [
 
 [project.theme]
 language = "tr"
+custom_dir = "overrides"
 features = [
   "announce.dismiss",
   "content.code.annotate",

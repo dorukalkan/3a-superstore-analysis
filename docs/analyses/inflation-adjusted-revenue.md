@@ -2,7 +2,8 @@
 icon: lucide/turkish-lira
 title: Revenue Performance & Inflation Analysis
 description: Inflation-adjusted real revenue vs. nominal revenue performance
---- 
+author: Doruk Alkan
+---
 
 # Revenue Performance & Inflation Analysis
 

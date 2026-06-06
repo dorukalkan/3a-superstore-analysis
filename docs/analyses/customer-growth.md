@@ -2,6 +2,7 @@
 icon: lucide/shopping-cart
 title: Customer Growth Opportunities
 description: Customer growth opportunities
+author: Ebubekir Tilbaç
 ---
 
 # Customer Growth Opportunities

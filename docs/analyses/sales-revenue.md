@@ -2,6 +2,7 @@
 icon: lucide/wallet
 title: Sales & Revenue Insights
 description: Sales and revenue analysis
+author: Ebubekir Tilbaç
 ---
 
 # Sales & Revenue Insights

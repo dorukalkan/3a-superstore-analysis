@@ -2,6 +2,7 @@
 icon: lucide/user-search
 title: Customer Retention & RFM Analysis
 description: Customer retention and RFM analysis
+author: Yasemen Dündar
 ---
 
 # Customer Retention & RFM Analysis

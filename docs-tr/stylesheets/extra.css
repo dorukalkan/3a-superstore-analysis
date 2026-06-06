@@ -1,0 +1,8 @@
+.project-page-author {
+  margin-top: -0.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--md-default-fg-color--light);
+  font-family: var(--md-code-font), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+}

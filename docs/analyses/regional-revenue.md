@@ -1,10 +1,11 @@
 ---
 icon: lucide/square-activity
-title: Revenue & Category Performance
+title: Region & Category Performance
 description: Revenue and category performance analysis
+author: Eda Bilgin
 ---
 
-# Revenue and Category Performance Analysis
+# Regional Revenue and Category Performance
 
 ## Overview
 
