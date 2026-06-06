@@ -1,11 +1,11 @@
+
+
+# Customer Health
+
 ![Power BI Customer Health Dashboard](../assets/Customer_Health.png)
 /// caption
 Customer Health Dashboard
 ///
-
-# Customer Health
-
-![Customer Health Dashboard](customer-health.png)
 
 ## Overview
 
@@ -104,7 +104,7 @@ Customer health monitoring enables proactive retention campaigns before revenue 
 
 # Customer Retention & RFM Analysis
 
-![Customer Retention Dashboard](customer-retention-rfm.png)
+
 
 ## Overview
 
