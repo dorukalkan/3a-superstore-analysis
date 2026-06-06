@@ -1,0 +1,1 @@
+SELECT count(*) as null_order_id_count FROM `superstore-analysis-496710.dbt_eda.stg_order_details` where order_id is null
