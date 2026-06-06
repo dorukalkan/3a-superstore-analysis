@@ -1,3 +1,7 @@
+---
+icon: lucide/square-terminal
+---
+
 # dbt & bq CLI commands
 
 dbt and BigQuery CLI commands to run & inspect models.

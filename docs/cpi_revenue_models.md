@@ -1,3 +1,7 @@
+---
+icon: lucide/braces
+---
+
 # CPI Revenue Models
 
 This model path answers a narrow question first:

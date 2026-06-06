@@ -1,3 +1,4 @@
+# Virtual environment, caches, and checkpoints
 .venv/
 __pycache__/
 .ipynb_checkpoints/
@@ -6,6 +7,7 @@ __pycache__/
 # credentials / secrets
 .env
 *.json
+!vercel.json
 profiles.yml
 .kaggle/
 .cache/
@@ -24,5 +26,11 @@ superstore/.user.yml
 # logs
 logs/
 
-# add exports
+# exports
 exports/
+
+# Zensical build artifacts
+site/
+
+# Vercel local project metadata
+.vercel/

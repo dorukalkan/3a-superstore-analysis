@@ -1,3 +1,7 @@
+---
+icon: lucide/braces
+---
+
 # Staging Models Preview
 
 Snapshot date: 2026-05-21
