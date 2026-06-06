@@ -8,7 +8,7 @@ This project analyzes revenue performance, category trends, and inflation-adjust
 
 # Regional Revenue Overview
 
-![Regional Revenue Overview](./images/regional_revenue_overview.png)
+![Regional Revenue Overview](../assets/Regional_Revenue_Overview.png)
 
 ## Dashboard Objective
 
@@ -60,7 +60,6 @@ The horizontal bar chart ranks categories according to their revenue contributio
 
 # Category Performance & Trends
 
-![Category Performance & Trends](./images/category_performance_trends.png)
 
 ## Dashboard Objective
 
