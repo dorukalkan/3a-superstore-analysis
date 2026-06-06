@@ -1,6 +1,6 @@
 # Sales & Revenue Insights
 
-![Sales & Revenue Insights Dashboard](../assets/sales-revenue-insights.png)
+![Power BI Dashboard](../assets/sales-revenue-insights.png)
 
 ## Overview
 
