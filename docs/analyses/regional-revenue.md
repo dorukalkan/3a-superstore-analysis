@@ -1,5 +1,5 @@
 ---
-icon: lucide/square-activity
+icon: lucide/map-pin
 title: Region & Category Performance
 description: Revenue and category performance analysis
 author: Eda Bilgin
@@ -7,13 +7,11 @@ author: Eda Bilgin
 
 # Regional Revenue and Category Performance
 
+![Regional Revenue Overview](../assets/Regional_Revenue_Overview.png)
+
 ## Overview
 
 This project analyzes revenue performance, category trends, using Power BI dashboards. The objective is to understand how revenue is distributed across regions and product categories, identify key business drivers, and evaluate sales performance over time.
-
-# Regional Revenue Overview
-
-![Regional Revenue Overview](../assets/Regional_Revenue_Overview.png)
 
 ## Dashboard Objective
 
