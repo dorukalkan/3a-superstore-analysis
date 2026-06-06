@@ -51,6 +51,12 @@ nav = [
   "index.md",
   { "Analyses" = [
     "analyses/inflation-adjusted-revenue.md",
+    "analyses/sales-revenue.md",
+    "analyses/customer-growth.md",
+    "analyses/customer-health.md",
+    "analyses/customer-retention-rfm.md",
+    "analyses/regional-revenue.md",
+    "analyses/category-performance-trends.md",
   ] },
   { "About" = [
     "about/dataset.md",
