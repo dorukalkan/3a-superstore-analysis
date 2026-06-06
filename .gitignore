@@ -29,8 +29,9 @@ logs/
 # exports
 exports/
 
-# Zensical build artifacts
+# Zensical build artifacts and internal docs
 site/
+docs/other/
 
 # Vercel local project metadata
 .vercel/
