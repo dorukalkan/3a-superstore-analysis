@@ -1,5 +1,5 @@
 ---
-icon: lucide/chart-column-increasing
+icon: lucide/database
 ---
 
 # Dataset
