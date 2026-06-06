@@ -1,5 +1,5 @@
 ---
-icon: lucide/shopping-cart
+icon: lucide/chart-no-axes-combined
 title: Customer Growth Opportunities
 description: Customer growth opportunities
 author: Ebubekir Tilbaç

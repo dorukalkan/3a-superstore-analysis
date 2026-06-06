@@ -1,5 +1,5 @@
 ---
-icon: lucide/wallet
+icon: lucide/shopping-cart
 title: Sales & Revenue Insights
 description: Sales and revenue analysis
 author: Ebubekir Tilbaç
