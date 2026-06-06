@@ -14,22 +14,6 @@ This project analyzes revenue performance, category trends, and inflation-adjust
 
 The Regional Revenue Overview dashboard provides a high-level view of revenue distribution across regions and product categories. It helps identify the strongest markets, the most profitable categories, and the overall revenue structure of the business.
 
-## KPI Summary
-
-### Nominal Revenue
-Total revenue generated during the analysis period without adjusting for inflation.
-
-### Real Revenue
-Inflation-adjusted revenue that reflects the actual purchasing power of generated sales.
-
-### Average Customer Count
-Average number of customers served throughout the analysis period.
-
-### Average Order Count
-Average number of orders processed during the period.
-
-### Average Units Sold
-Average quantity of products sold across all transactions.
 
 ## Visual Analysis
 
