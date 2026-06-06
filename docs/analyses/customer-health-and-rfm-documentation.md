@@ -1,3 +1,8 @@
+![Power BI Customer Health Dashboard](../assets/Customer_Health.png)
+/// caption
+Customer Health Dashboard
+///
+
 # Customer Health
 
 ![Customer Health Dashboard](customer-health.png)
