@@ -1,6 +1,6 @@
 # Sales & Revenue Insights
 
-![Power BI Customer Health Dashboard](../sales-revenue-insights.png)
+![Power BI Customer Health Dashboard](../assets/Sales_Revenue_Insights.png)
 
 ## Overview
 
