@@ -61,6 +61,10 @@ The horizontal bar chart ranks categories according to their revenue contributio
 # Category Performance & Trends
 
 
+![Category Performance Trends](../assets/Category_Performance_Trends.png)
+
+
+
 ## Dashboard Objective
 
 This dashboard focuses on category-level performance by examining the relationship between revenue, sales quantity, and order activity. It aims to identify the factors driving business growth and category success.
