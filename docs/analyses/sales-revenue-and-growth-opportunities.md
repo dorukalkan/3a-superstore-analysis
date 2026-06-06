@@ -1,6 +1,6 @@
 # Sales & Revenue Insights
 
-![Sales & Revenue Insights Dashboard](sales-revenue-insights.png)
+![Sales & Revenue Insights Dashboard](../assets/sales-revenue-insights.png)
 
 ## Overview
 
@@ -88,7 +88,7 @@ Forecasted city-level revenue enables targeted regional investments and localize
 
 # Customer Growth Opportunities
 
-![Customer Growth Opportunities Dashboard](customer-growth-opportunities.png)
+![Customer Growth Opportunities Dashboard](../assets/customer-growth-opportunities.png)
 
 ## Overview
 
