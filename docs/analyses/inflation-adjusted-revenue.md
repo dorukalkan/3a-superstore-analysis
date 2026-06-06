@@ -1,6 +1,8 @@
 ---
 icon: lucide/turkish-lira
----
+title: Revenue Performance & Inflation Analysis
+description: Inflation-adjusted real revenue vs. nominal revenue performance
+--- 
 
 # Revenue Performance & Inflation Analysis
 
@@ -8,8 +10,6 @@ icon: lucide/turkish-lira
 /// caption
 Power BI dashboard on nominal vs. real revenue performance
 ///
-
-# Revenue Performance & Inflation Analysis
 
 ## Overview
 
@@ -38,7 +38,7 @@ The dashboard summarizes the inflation story from several angles: CPI trend, nom
 
 ## Methodology
 
-The analysis uses monthly CPI data from TCMB EVDS and joins it to monthly revenue aggregates created in dbt.
+The analysis uses monthly CPI data from TCMB EVDS[^evds] and joins it to monthly revenue aggregates created in dbt.
 
 The transformation pipeline follows this structure:
 
@@ -164,3 +164,5 @@ Nominal revenue increased, but real revenue declined. Customer, order, and unit 
 The final conclusion is straightforward:
 
 > The supermarket looked larger in nominal terms, but its real revenue performance weakened under inflation.
+
+[^evds]: TCMB EVDS is the Electronic Data Delivery System of the Central Bank of the Republic of Türkiye. It provides access to official economic time series, including CPI data. See the [EVDS portal](https://evds3.tcmb.gov.tr) and [EVDS documentation](https://evds3.tcmb.gov.tr/dokumanlar) for API and usage details.
