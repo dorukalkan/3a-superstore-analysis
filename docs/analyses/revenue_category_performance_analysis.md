@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project analyzes revenue performance, category trends, and inflation-adjusted business metrics using Power BI dashboards. The objective is to understand how revenue is distributed across regions and product categories, identify key business drivers, and evaluate sales performance over time.
+This project analyzes revenue performance, category trends, using Power BI dashboards. The objective is to understand how revenue is distributed across regions and product categories, identify key business drivers, and evaluate sales performance over time.
 
 ---
 
