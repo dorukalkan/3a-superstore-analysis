@@ -1,6 +1,6 @@
 # Sales & Revenue Insights
 
-![Power BI Customer Health Dashboard](../assets/Sales_Revenue_Insights.png)
+![Power BI Dashboard](../assets/Sales_Revenue_Insights.png)
 
 ## Overview
 
@@ -88,7 +88,7 @@ Forecasted city-level revenue enables targeted regional investments and localize
 
 # Customer Growth Opportunities
 
-![Customer Growth Opportunities Dashboard](../assets/customer-growth-opportunities.png)
+![Power BI Dashboard](../assets/Customer_Growth_oppotunitues.png)
 
 ## Overview
 
