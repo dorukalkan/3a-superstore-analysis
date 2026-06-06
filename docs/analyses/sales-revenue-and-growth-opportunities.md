@@ -88,7 +88,7 @@ Forecasted city-level revenue enables targeted regional investments and localize
 
 # Customer Growth Opportunities
 
-![Power BI Dashboard](../assets/Customer_Growth_oppotunitues.png)
+![Power BI Dashboard](../assets/Customer_Growth_Oppotunitues.png)
 
 ## Overview
 
