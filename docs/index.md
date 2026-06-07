@@ -5,7 +5,7 @@ title: Overview
 
 # 3A Superstore Analytics Project
 
-3A Superstore Analytics is a team data analytics project on retail transaction data. The project uses BigQuery, dbt, Python notebooks, Power BI, and Zensical to analyze revenue quality, inflation-adjusted performance, customer behavior, category trends, regional concentration, and retention opportunities.
+3A Superstore Analytics is a team data analytics project on retail transaction data. The project uses BigQuery, dbt, Python notebooks, Power BI to analyze sales, inflation-adjusted revenue performance, customer behavior, category trends, regional concentration, and retention opportunities.
 
 !!! note "Project takeaway"
 
@@ -96,8 +96,6 @@ flowchart LR
   marts --> notebooks[Modeling notebooks]
 ```
 
-For more detail, see [CPI Revenue Models](other/cpi_revenue_models.md), [Staging Models Preview](other/staging_models_preview.md), and [dbt & BigQuery Commands](other/dbt_bq_commands.md).
-
 ## Tools Used
 
 | Tool | Role |
@@ -123,12 +121,6 @@ For more detail, see [CPI Revenue Models](other/cpi_revenue_models.md), [Staging
     ---
 
     Team members, ownership, and project focus areas.
-
--   :octicons-book-24:{ .lg .middle } __[Technical Notes](other/cpi_revenue_models.md)__
-
-    ---
-
-    dbt model documentation, staging previews, and BigQuery command references.
 
 -   :fontawesome-brands-github:{ .lg .middle } __[GitHub Repository](https://github.com/dorukalkan/3a-superstore-analysis)__
 

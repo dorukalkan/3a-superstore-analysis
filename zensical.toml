@@ -58,6 +58,11 @@ nav = [
     "analyses/regional-revenue.md",
     "analyses/category-performance-trends.md",
   ] },
+  { "dbt Models" = [
+    "models/staging.md",
+    "models/intermediate.md",
+    "models/marts.md",
+  ] },
   { "About" = [
     "about/dataset.md",
     "about/team.md",
