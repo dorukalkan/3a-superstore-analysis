@@ -9,9 +9,9 @@ title: Overview
 
 # 3A Superstore Analytics Project
 
-3A Superstore Analytics is a team data analytics project on retail transaction data. The project uses BigQuery, dbt, Python notebooks, Power BI to analyze sales, inflation-adjusted revenue performance, customer behavior, category trends, regional concentration, and retention opportunities.
+3A Superstore Analytics is a team-based data analytics project on retail transaction data. The project uses BigQuery, dbt, Python notebooks, Power BI to analyze sales, inflation-adjusted revenue performance, customer behavior, category trends, regional concentration, and retention opportunities.
 
-!!! note "Project takeaway"
+!!! note "A note on the project"
 
     Because the dataset covers Turkish retail sales during a high-inflation period, nominal sales can be misleading. The project combines transaction data with [TCMB EVDS](https://evds3.tcmb.gov.tr) CPI data to compare nominal and real revenue, then checks the result against order, customer, unit, and product-price signals.
 

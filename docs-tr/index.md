@@ -7,17 +7,17 @@ title: Genel Bakış
   <img src="assets/readme_banner.png" alt="3A Superstore Analysis proje afişi">
 </p>
 
-# 3A Superstore Analitik Projesi
+# 3A Superstore Data Analitiği Projesi
 
-3A Superstore Analytics, perakende işlem verisi üzerinde hazırlanmış bir ekip veri analitiği projesidir. Projede satışları, enflasyona göre düzeltilmiş gelir performansını, müşteri davranışını, kategori trendlerini, bölgesel yoğunlaşmayı ve elde tutma fırsatlarını analiz etmek için BigQuery, dbt, Python notebookları ve Power BI kullanıldı.
+3A Superstore Analytics, perakende işlem verisi üzerinde ekipçe hazırlanmış bir veri analitiği projesidir. Projede satışları, enflasyona göre düzeltilmiş gelir performansını, müşteri davranışını, kategori trendlerini, bölgesel yoğunlaşmayı ve retention (müşteriyi elde tutma) fırsatlarını analiz etmek için BigQuery, dbt, Python notebookları ve Power BI kullanıldı.
 
 !!! note "Proje çıkarımı"
 
-    Veri seti Türkiye'de yüksek enflasyon yaşanan bir dönemdeki perakende satışlarını kapsadığı için nominal satışlar yanıltıcı olabilir. Proje, nominal ve reel geliri karşılaştırmak için işlem verisini [TCMB EVDS](https://evds3.tcmb.gov.tr) TÜFE verisiyle birleştirir; ardından sonucu sipariş, müşteri, adet ve ürün fiyatı sinyalleriyle kontrol eder.
+    Veri seti Türkiye'de yüksek enflasyon yaşanan bir dönemdeki perakende satışlarını kapsadığı için nominal satışlar yanıltıcı olabilir. Proje, nominal ve reel geliri karşılaştırmak için işlem verisini [TCMB EVDS](https://evds3.tcmb.gov.tr) TÜFE verisiyle birleştirir; ardından sonucu sipariş, müşteri, ürün adedi ve ürün fiyatı sinyalleriyle kontrol eder.
 
 ## Analiz Portföyü
 
-Her analiz sayfası farklı bir iş sorusuna odaklanır ve bir ekip üyesi tarafından sahiplenilir.
+Her ekip üyesi farklı bir iş sorusuna odaklanıp analizini onun üzerine kurmuştur.
 
 <div class="grid cards" markdown>
 
@@ -49,7 +49,7 @@ Her analiz sayfası farklı bir iş sorusuna odaklanır ve bir ekip üyesi taraf
 
     ---
 
-    Müşteri değer segmentasyonu, sağlık aşamaları, coğrafi değer yoğunlaşması ve elde tutma öncelikleri.
+    Müşteri değer segmentasyonu, sağlık aşamaları, coğrafi değer yoğunlaşması ve retention öncelikleri.
 
     _Yazar: Yasemen Dündar_
 
@@ -57,7 +57,7 @@ Her analiz sayfası farklı bir iş sorusuna odaklanır ve bir ekip üyesi taraf
 
     ---
 
-    RFM segmentasyonu, aktif müşteri oranı, risk altındaki gelir ve elde tutma stratejisi.
+    RFM segmentasyonu, aktif müşteri oranı, risk altındaki gelir ve retention stratejisi.
 
     _Yazar: Yasemen Dündar_
 
@@ -86,7 +86,7 @@ dbt projesi katmanlı bir model yapısıyla düzenlendi:
 - Staging modelleri siparişler, sipariş detayları, müşteriler, şubeler, kategoriler ve TÜFE için ham BigQuery tablolarını temizler.
 - Intermediate modelleri sipariş geliri, şube boyutları, aylık TÜFE metrikleri ve ürün-ay fiyatlaması gibi yeniden kullanılabilir analitik mantıkları oluşturur.
 - Mart modelleri gelir trendleri, KPI kartları, ürün fiyat trendleri, kategori fiyat hareketleri, şube geliri, müşteri 360 ve RFM analizi için dashboard'a hazır tablolar üretir.
-- Özel dbt testleri grain, mutabakat, TÜFE matematiği, dönem pencereleri ve dashboard KPI hesaplamalarını doğrular.
+- Özel dbt testleri grain, TÜFE matematiği, dönem pencereleri ve dashboard KPI hesaplamalarını doğrular.
 
 Mevcut dbt grafiği parse edildikten sonra 26 model, 1 seed ve 189 test içerir.
 
@@ -124,12 +124,12 @@ flowchart LR
 
     ---
 
-    Ekip üyeleri, sahiplik alanları ve proje odakları.
+    Ekip üyeleri ve proje odakları.
 
 -   :fontawesome-brands-github:{ .lg .middle } __[GitHub Deposu](https://github.com/dorukalkan/3a-superstore-analysis)__
 
     ---
 
-    Kaynak kod, dbt modelleri, notebooklar, sorgu arşivi ve Zensical site dosyaları.
+    Kaynak kod, dbt modelleri, notebooklar, SQL sorgu arşivi ve Zensical site dosyaları.
 
 </div>
