@@ -37,13 +37,13 @@ To separate these effects, I compared nominal revenue, inflation-adjusted real r
 
     ---
 
-    Total nominal revenue reached approximately **13.11bn TRY** during the analysis period.
+    Total nominal revenue reached approximately **13.11B TRY** during the analysis period.
 
 -   :lucide-chart-no-axes-column-decreasing:{ .lg .middle } __Real revenue weakened__
 
     ---
 
-    After CPI adjustment, total real revenue was approximately **7.87bn TRY**, showing weaker purchasing-power performance.
+    After CPI adjustment, total real revenue was approximately **7.87B TRY**, showing weaker purchasing-power performance.
 
 -   :lucide-shopping-basket:{ .lg .middle } __Volume did not explain growth__
 
@@ -89,7 +89,7 @@ The modeled workflow follows this structure:
 
 ### Nominal revenue rose, but real revenue declined
 
-Across the analysis period, total nominal revenue reached approximately 13.11bn TRY. However, after inflation adjustment, total real revenue was approximately 7.87bn TRY.
+Across the analysis period, total nominal revenue reached approximately 13.11B TRY. However, after inflation adjustment, total real revenue was approximately 7.87B TRY.
 
 This shows that the business collected more money in nominal terms, but that money represented significantly less purchasing power after accounting for inflation.
 
