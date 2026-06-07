@@ -1,8 +1,20 @@
-# 3A Superstore Analysis
+<p align="center">
+  <img src="docs/assets/readme_banner.png" alt="3A Superstore Analysis banner">
+</p>
 
-[![Zensical project website](https://img.shields.io/badge/project_site-live-2ea44f?style=flat-square)](https://3a-superstore-analysis.vercel.app)
-[![dbt + BigQuery](https://img.shields.io/badge/dbt-BigQuery-FF694B?style=flat-square)](https://docs.getdbt.com/docs/core/connect-data-platform/bigquery-setup)
-[![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+<p align="center">
+  <a href="https://3a-superstore-analysis.vercel.app">
+    <img src="https://img.shields.io/badge/project_site-live-2ea44f?style=flat-square" alt="Zensical project website">
+  </a>
+  <a href="https://docs.getdbt.com/docs/core/connect-data-platform/bigquery-setup">
+    <img src="https://img.shields.io/badge/dbt-BigQuery-FF694B?style=flat-square" alt="dbt + BigQuery">
+  </a>
+  <a href="https://www.python.org/">
+    <img src="https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&amp;logo=python&amp;logoColor=white" alt="Python 3.13">
+  </a>
+</p>
+
+# 3A Superstore Analysis
 
 3A Superstore Analysis is an end-to-end analytics project on retail transaction data from a Turkish supermarket. We used BigQuery, dbt, Python notebooks, Power BI to turn raw supermarket orders into documented business analysis covering revenue growth, inflation adjustment, customer behavior, regional performance, category trends, and retention opportunities.
 
