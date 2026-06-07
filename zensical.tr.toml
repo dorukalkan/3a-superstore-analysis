@@ -12,6 +12,17 @@ nav = [
   "index.md",
   { "Analizler" = [
     "analizler/gelir-performansi-enflasyon.md",
+    "analizler/satis-gelir-icgoruleri.md",
+    "analizler/musteri-buyume-firsatlari.md",
+    "analizler/musteri-sagligi.md",
+    "analizler/musteri-elde-tutma-rfm.md",
+    "analizler/bolge-kategori-performansi.md",
+    "analizler/kategori-trendleri.md",
+  ] },
+  { "dbt Modelleri" = [
+    "modeller/staging.md",
+    "modeller/intermediate.md",
+    "modeller/marts.md",
   ] },
   { "Hakkında" = [
     "hakkinda/veri-seti.md",
