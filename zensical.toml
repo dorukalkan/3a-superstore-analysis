@@ -27,7 +27,7 @@ site_author = "Doruk Alkan"
 # The site_url is the canonical URL for your site. When building online
 # documentation you should set this.
 # Read more: https://zensical.org/docs/setup/basics/#site_url
-#site_url = "https://www.example.com/"
+site_url = "https://3a-superstore-analysis.vercel.app"
 
 repo_url = "https://github.com/dorukalkan/3a-superstore-analysis"
 repo_name = "3a-superstore-analysis"
