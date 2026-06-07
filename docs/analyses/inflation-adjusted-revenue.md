@@ -7,7 +7,7 @@ author: Doruk Alkan
 
 # Revenue Performance & Inflation Analysis
 
-!!! note "Bottom line"
+!!! note "Summary"
 
     3A Superstore collected more Turkish lira over time, but earned less in real purchasing-power terms.
 
