@@ -3,6 +3,10 @@ icon: lucide/house
 title: Overview
 ---
 
+<p class="landing-page-banner">
+  <img src="assets/readme_banner.png" alt="3A Superstore Analysis project banner">
+</p>
+
 # 3A Superstore Analytics Project
 
 3A Superstore Analytics is a team data analytics project on retail transaction data. The project uses BigQuery, dbt, Python notebooks, Power BI to analyze sales, inflation-adjusted revenue performance, customer behavior, category trends, regional concentration, and retention opportunities.
