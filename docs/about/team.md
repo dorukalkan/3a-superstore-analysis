@@ -28,13 +28,6 @@ Project writeups:
 - [Sales & Revenue Insights](../analyses/sales-revenue.md)
 - [Customer Growth Opportunities](../analyses/customer-growth.md)
 
-```text title="Email"
-ebubekir@example.com
-```
-
-[LinkedIn :fontawesome-brands-linkedin:](https://www.linkedin.com/in/ebubekir-placeholder/){ .md-button }
-[GitHub :fontawesome-brands-github:](https://github.com/ebubekirtilbac){ .md-button }
-
 ## Yasemen Salım Dündar
 
 Focused on customer analytics, including customer health segmentation, customer value distribution, RFM analysis, retention priorities, and revenue-at-risk interpretation.
@@ -59,10 +52,3 @@ Project writeups:
 
 - [Region & Category Performance](../analyses/regional-revenue.md)
 - [Category Trends](../analyses/category-performance-trends.md)
-
-```text title="Email"
-eda@example.com
-```
-
-[LinkedIn :fontawesome-brands-linkedin:](https://www.linkedin.com/in/eda-placeholder/){ .md-button }
-[GitHub :fontawesome-brands-github:](https://github.com/edabilgin){ .md-button }
