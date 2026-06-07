@@ -2,6 +2,7 @@
 site_name = "3A Superstore Analizi"
 site_description = "3A Superstore veri seti üzerine uçtan uca bir veri analitiği projesi."
 site_author = "Doruk Alkan"
+site_url = "https://3a-superstore-analysis.vercel.app/tr/"
 docs_dir = "docs-tr"
 site_dir = "site/tr"
 repo_url = "https://github.com/dorukalkan/3a-superstore-analysis"
