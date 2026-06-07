@@ -67,13 +67,6 @@ nav = [
     "about/dataset.md",
     "about/team.md",
   ] },
-  { "Other" = [
-    "other/cpi_revenue_models.md",
-    "other/staging_models_preview.md",
-    "other/dbt_bq_commands.md",
-    "other/markdown.md",
-    "other/example.md",
-  ] },
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
