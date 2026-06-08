@@ -28,7 +28,7 @@ Proje yazıları:
 - [Satış ve Gelir İçgörüleri](../analizler/satis-gelir-icgoruleri.md)
 - [Müşteri Büyüme Fırsatları](../analizler/musteri-buyume-firsatlari.md)
 
-- ```text title="E-posta"
+```text title="E-posta"
 ebubekirtilbac@gmail.com
 ```
 
