@@ -28,7 +28,7 @@ Project writeups:
 - [Sales & Revenue Insights](../analyses/sales-revenue.md)
 - [Customer Growth Opportunities](../analyses/customer-growth.md)
 
-- ```text title="Email"
+ ```text title="Email"
 ebubekirtilbac@gmail.com
 ```
 
