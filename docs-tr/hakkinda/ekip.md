@@ -28,6 +28,13 @@ Proje yazıları:
 - [Satış ve Gelir İçgörüleri](../analizler/satis-gelir-icgoruleri.md)
 - [Müşteri Büyüme Fırsatları](../analizler/musteri-buyume-firsatlari.md)
 
+- ```text title="E-posta"
+ebubekirtilbac@gmail.com
+```
+
+[LinkedIn :fontawesome-brands-linkedin:](https://www.linkedin.com/in/ebubekirtilbac){ .md-button }
+[GitHub :fontawesome-brands-github:](https://github.com/ebubekirtilbac){ .md-button }
+
 ## Yasemen Salım Dündar
 
 Müşteri sağlığı segmentasyonu, müşteri değer dağılımı, RFM analizi, elde tutma öncelikleri ve risk altındaki gelir yorumlaması dahil müşteri analitiği üzerine çalıştı.
