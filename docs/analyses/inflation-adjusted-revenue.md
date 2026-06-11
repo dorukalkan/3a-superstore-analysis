@@ -7,142 +7,176 @@ author: Doruk Alkan
 
 # Revenue Performance & Inflation Analysis
 
-!!! note "Summary"
+=== "Analysis"
 
-    3A Superstore collected more Turkish lira over time, but earned less in real purchasing-power terms.
+    !!! note "Summary"
 
-    Nominal revenue looked stronger because prices and CPI increased sharply. After inflation adjustment, the business story changed: real revenue weakened, while orders and units sold did not show enough growth to explain the nominal increase.
+        3A Superstore collected more Turkish lira over time, but earned less in real purchasing-power terms.
 
-    The main takeaway is simple: in a high-inflation market, nominal revenue is not enough. Revenue should be evaluated together with real revenue, volume, and price-adjusted KPIs.
+        Nominal revenue looked stronger because prices and CPI increased sharply. After inflation adjustment, the business story changed: real revenue weakened, while orders and units sold did not show enough growth to explain the nominal increase.
 
-![Power BI Revenue Performance Dashboard](../assets/revenue_dashboard.png)
+        The main takeaway is simple: in a high-inflation market, nominal revenue is not enough. Revenue should be evaluated together with real revenue, volume, and price-adjusted KPIs.
 
-The dashboard summarizes the inflation story from several angles: CPI trend, nominal vs. real revenue, annual revenue comparison, customer/order/unit changes, and product-level price increases.
+    ![Power BI Revenue Performance Dashboard](../assets/revenue_dashboard.png)
 
-## Business Question
+    The dashboard summarizes the inflation story from several angles: CPI trend, nominal vs. real revenue, annual revenue comparison, customer/order/unit changes, and product-level price increases.
 
-This analysis focuses on one core question:
+    ## Business Question
 
-> Did 3A Superstore's revenue actually grow, or did nominal growth mainly reflect inflation-driven price increases?
+    This analysis focuses on one core question:
 
-The dataset covers a Turkish supermarket chain over a high-inflation period. In that context, looking only at nominal revenue can be misleading. A business may appear to be growing because the amount of money collected at checkout increases, while the real purchasing power of that revenue declines.
+    > Did 3A Superstore's revenue actually grow, or did nominal growth mainly reflect inflation-driven price increases?
 
-To separate these effects, I compared nominal revenue, inflation-adjusted real revenue, customer/order/unit volume, and realized product price changes.
+    The dataset covers a Turkish supermarket chain over a high-inflation period. In that context, looking only at nominal revenue can be misleading. A business may appear to be growing because the amount of money collected at checkout increases, while the real purchasing power of that revenue declines.
 
-## What the Evidence Shows
+    To separate these effects, I compared nominal revenue, inflation-adjusted real revenue, customer/order/unit volume, and realized product price changes.
 
-<div class="grid cards" markdown>
+    ## What the Evidence Shows
 
--   :lucide-trending-up:{ .lg .middle } __Nominal revenue rose__
+    <div class="grid cards" markdown>
 
-    ---
+    -   :lucide-trending-up:{ .lg .middle } __Nominal revenue rose__
 
-    Total nominal revenue reached approximately **13.11B TRY** during the analysis period.
+        ---
 
--   :lucide-chart-no-axes-column-decreasing:{ .lg .middle } __Real revenue weakened__
+        Total nominal revenue reached approximately **13.11B TRY** during the analysis period.
 
-    ---
+    -   :lucide-chart-no-axes-column-decreasing:{ .lg .middle } __Real revenue weakened__
 
-    After CPI adjustment, total real revenue was approximately **7.87B TRY**, showing weaker purchasing-power performance.
+        ---
 
--   :lucide-shopping-basket:{ .lg .middle } __Volume did not explain growth__
+        After CPI adjustment, total real revenue was approximately **7.87B TRY**, showing weaker purchasing-power performance.
 
-    ---
+    -   :lucide-shopping-basket:{ .lg .middle } __Volume did not explain growth__
 
-    Units sold and order count declined by around **3.6%**.
+        ---
 
--   :lucide-tags:{ .lg .middle } __Prices moved sharply__
+        Units sold and order count declined by around **3.6%**.
 
-    ---
+    -   :lucide-tags:{ .lg .middle } __Prices moved sharply__
 
-    Product-level paid prices increased substantially, with several major categories showing price increases above **100%**.
+        ---
 
-</div>
+        Product-level paid prices increased substantially, with several major categories showing price increases above **100%**.
 
-## Methodology
+    </div>
 
-The analysis uses monthly CPI data from TCMB EVDS[^evds] and joins it to monthly revenue aggregates created in dbt.
+    ## Methodology
 
-The CPI series is an index, so the original 2003 baseline is not directly meaningful for this business question. What matters is the ratio between CPI levels. In the dashboard, January 2021 is used as the base period. This makes the first month of the analysis equal for nominal and real revenue, then shows how the two series diverge over time.
+    The analysis uses monthly CPI data from TCMB EVDS[^evds] and joins it to monthly revenue aggregates created in dbt.
 
-```text
-real_revenue = nominal_revenue * CPI_base_month / CPI_current_month
-```
+    The CPI series is an index, so the original 2003 baseline is not directly meaningful for this business question. What matters is the ratio between CPI levels. In the dashboard, January 2021 is used as the base period. This makes the first month of the analysis equal for nominal and real revenue, then shows how the two series diverge over time.
 
-The modeled workflow follows this structure:
+    ```text
+    real_revenue = nominal_revenue * CPI_base_month / CPI_current_month
+    ```
 
-1. Clean and standardize raw order and order-detail tables.
-2. Aggregate order-level revenue into monthly revenue.
-3. Prepare monthly CPI metrics and January 2021 adjustment factors.
-4. Convert nominal revenue into inflation-adjusted real revenue.
-5. Create dashboard-ready revenue marts.
-6. Validate the revenue story with volume metrics and item/category price changes.
+    The modeled workflow follows this structure:
 
-??? info "dbt models used"
+    1. Clean and standardize raw order and order-detail tables.
+    2. Aggregate order-level revenue into monthly revenue.
+    3. Prepare monthly CPI metrics and January 2021 adjustment factors.
+    4. Convert nominal revenue into inflation-adjusted real revenue.
+    5. Create dashboard-ready revenue marts.
+    6. Validate the revenue story with volume metrics and item/category price changes.
 
-    - `fct_monthly_revenue`: monthly nominal revenue, real revenue, CPI metrics, order count, customer count, units sold, and January 2021 revenue indexes.
-    - `mart_revenue_trend_monthly`: dashboard trend table for nominal revenue, real revenue, and CPI index.
-    - `mart_revenue_story_kpis`: January 2021 vs. June 2023 KPI comparison for revenue, CPI, orders, units, and customers.
-    - Product price marts: paid-price trend and category price movement tables used to validate whether nominal growth was price-driven.
+    ??? info "dbt models used"
 
-## Evidence Behind the Conclusion
+        - `fct_monthly_revenue`: monthly nominal revenue, real revenue, CPI metrics, order count, customer count, units sold, and January 2021 revenue indexes.
+        - `mart_revenue_trend_monthly`: dashboard trend table for nominal revenue, real revenue, and CPI index.
+        - `mart_revenue_story_kpis`: January 2021 vs. June 2023 KPI comparison for revenue, CPI, orders, units, and customers.
+        - Product price marts: paid-price trend and category price movement tables used to validate whether nominal growth was price-driven.
 
-### Nominal revenue rose, but real revenue declined
+    ## Evidence Behind the Conclusion
 
-Across the analysis period, total nominal revenue reached approximately 13.11B TRY. However, after inflation adjustment, total real revenue was approximately 7.87B TRY.
+    ### Nominal revenue rose, but real revenue declined
 
-This shows that the business collected more money in nominal terms, but that money represented significantly less purchasing power after accounting for inflation.
+    Across the analysis period, total nominal revenue reached approximately 13.11B TRY. However, after inflation adjustment, total real revenue was approximately 7.87B TRY.
 
-The main trend chart shows this clearly: nominal revenue follows an upward path, while inflation-adjusted revenue declines over time. In other words, revenue appears to grow on paper, but its real economic value erodes.
+    This shows that the business collected more money in nominal terms, but that money represented significantly less purchasing power after accounting for inflation.
 
-### CPI pressure was large enough to change the interpretation
+    The main trend chart shows this clearly: nominal revenue follows an upward path, while inflation-adjusted revenue declines over time. In other words, revenue appears to grow on paper, but its real economic value erodes.
 
-The CPI index rose dramatically over the analysis period, reaching roughly 263 on the dashboard's January 2021 = 100 scale. This means the general price level rose by more than 160% relative to the start of the dataset.
+    ### CPI pressure was large enough to change the interpretation
 
-This inflationary environment is the main reason nominal revenue alone is not enough to evaluate performance. If the business only tracks current-price sales, it can mistake price-level growth for real business growth.
+    The CPI index rose dramatically over the analysis period, reaching roughly 263 on the dashboard's January 2021 = 100 scale. This means the general price level rose by more than 160% relative to the start of the dataset.
 
-### Orders and units did not support a volume-growth story
+    This inflationary environment is the main reason nominal revenue alone is not enough to evaluate performance. If the business only tracks current-price sales, it can mistake price-level growth for real business growth.
 
-To check whether nominal revenue growth came from actual business expansion, I compared customer count, order count, and units sold.
+    ### Orders and units did not support a volume-growth story
 
-The result was not consistent with strong volume growth:
+    To check whether nominal revenue growth came from actual business expansion, I compared customer count, order count, and units sold.
 
-- Customer count changed only slightly.
-- Units sold and order count both declined by around 3.6%.
+    The result was not consistent with strong volume growth:
 
-This means the nominal revenue increase was not mainly driven by more customers, more orders, or more units sold. The volume side of the business remained broadly stable or slightly weaker.
+    - Customer count changed only slightly.
+    - Units sold and order count both declined by around 3.6%.
 
-### Product prices validated the inflation explanation
+    This means the nominal revenue increase was not mainly driven by more customers, more orders, or more units sold. The volume side of the business remained broadly stable or slightly weaker.
 
-The item-level analysis supports the inflation hypothesis. Across thousands of products, realized paid prices increased substantially over the period.
+    ### Product prices validated the inflation explanation
 
-The dashboard shows average paid price increases above 100% across major product categories. For example, hot beverages showed one of the highest increases, at around 121%, while several other categories such as cleaning, produce, baby products, and dairy also showed strong price growth.
+    The item-level analysis supports the inflation hypothesis. Across thousands of products, realized paid prices increased substantially over the period.
 
-This helps explain why nominal revenue increased despite weak volume growth: the business was selling products at higher nominal prices, but those higher prices did not translate into stronger real revenue.
+    The dashboard shows average paid price increases above 100% across major product categories. For example, hot beverages showed one of the highest increases, at around 121%, while several other categories such as cleaning, produce, baby products, and dairy also showed strong price growth.
 
-## Business Implications
+    This helps explain why nominal revenue increased despite weak volume growth: the business was selling products at higher nominal prices, but those higher prices did not translate into stronger real revenue.
 
-!!! tip "Management takeaway"
+    ## Business Implications
 
-    3A Superstore's revenue growth was largely inflation-driven rather than volume-driven.
+    !!! tip "Management takeaway"
 
-    In other words, the supermarket collected more TRY over time, but earned less in real purchasing-power terms.
+        3A Superstore's revenue growth was largely inflation-driven rather than volume-driven.
 
-    If management only tracks nominal revenue, the business may appear healthier than it really is. Real revenue, real average order value, volume, and price-adjusted KPIs provide a more reliable view of business health in a high-inflation market.
+        In other words, the supermarket collected more TRY over time, but earned less in real purchasing-power terms.
 
-## Recommended Actions
+        If management only tracks nominal revenue, the business may appear healthier than it really is. Real revenue, real average order value, volume, and price-adjusted KPIs provide a more reliable view of business health in a high-inflation market.
 
-The main strategic implication is that revenue growth needs to be evaluated against inflation, not just against previous nominal sales.
+    ## Recommended Actions
 
-To protect real revenue, the business would need to pursue strategies that generate growth above inflation, such as:
+    The main strategic implication is that revenue growth needs to be evaluated against inflation, not just against previous nominal sales.
 
-- monitoring real revenue and real average order value as standard KPIs,
-- comparing nominal growth against CPI before calling it business growth,
-- improving customer retention and purchase frequency,
-- increasing basket value through targeted promotions,
-- optimizing product mix toward higher-margin or more resilient categories,
-- investigating weaker regions and branches through the regional dashboards.
+    To protect real revenue, the business would need to pursue strategies that generate growth above inflation, such as:
 
-For high-inflation markets, nominal revenue should not be treated as the primary success metric. Real revenue, volume, and price-adjusted KPIs provide a more reliable view of business health.
+    - monitoring real revenue and real average order value as standard KPIs,
+    - comparing nominal growth against CPI before calling it business growth,
+    - improving customer retention and purchase frequency,
+    - increasing basket value through targeted promotions,
+    - optimizing product mix toward higher-margin or more resilient categories,
+    - investigating weaker regions and branches through the regional dashboards.
 
-[^evds]: TCMB EVDS is the Electronic Data Delivery System of the Central Bank of the Republic of Türkiye. It provides access to official economic time series, including CPI data. See the [EVDS portal](https://evds3.tcmb.gov.tr) and [EVDS documentation](https://evds3.tcmb.gov.tr/dokumanlar) for API and usage details.
+    For high-inflation markets, nominal revenue should not be treated as the primary success metric. Real revenue, volume, and price-adjusted KPIs provide a more reliable view of business health.
+
+    [^evds]: TCMB EVDS is the Electronic Data Delivery System of the Central Bank of the Republic of Türkiye. It provides access to official economic time series, including CPI data. See the [EVDS portal](https://evds3.tcmb.gov.tr) and [EVDS documentation](https://evds3.tcmb.gov.tr/dokumanlar) for API and usage details.
+
+
+=== "Further reading"
+
+    Here are a few resources on inflation for those who might be interested; as well as key material from the project including my dbt models (SQL files), API fetch scripts, and Jupyter notebooks. 
+
+    ## Resources on inflation and CPI
+
+    Khan Academy's [Economic indicators and the business cycle](https://www.khanacademy.org/economics-finance-domain/ap-macroeconomics/economic-iondicators-and-the-business-cycle) unit from its macroeconomics course contains several lessons that are relevant:  
+
+    - [Lesson 4](https://www.khanacademy.org/economics-finance-domain/ap-macroeconomics/economic-iondicators-and-the-business-cycle/price-indices-and-inflation/v/introduction-to-inflation) - Price indices and inflation
+    - [Lesson 5](https://www.khanacademy.org/economics-finance-domain/ap-macroeconomics/economic-iondicators-and-the-business-cycle/costs-of-inflation/v/winners-and-losers-from-inflation-and-deflation-ap-macroeconomics-khan-academy) - Costs of inflation
+    - [Lesson 6](https://www.khanacademy.org/economics-finance-domain/ap-macroeconomics/economic-iondicators-and-the-business-cycle/real-vs-nominal-gdp/v/real-gdp-and-nominal-gdp) - Real GDP and nominal GDP
+
+    N. G. Mankiw's *Principles of Economics* is a popular textbook used in many introductory microeconomics & macroeconomics classes. It has a chapter dedicated to the subject:
+
+    - Part X: Money and Prices in the Long Run, Chapter 30: Money Growth and Inflation
+
+    It can easily be found online.
+ 
+    ## Project files
+
+    - [CPI seed dataset](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/seeds/evds_cpi_monthly.csv)
+    - [TCMB EVDS CPI fetch script](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/scripts/fetch_evds_cpi.py)
+    - [CPI model](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/intermediate/int_cpi_monthly.sql)
+    - [Order revenue model](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/intermediate/int_order_revenue.sql)
+    - [Product pricing model](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/intermediate/int_item_month_pricing.sql)
+    - [Monthly revenue fact model](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/marts/fct_monthly_revenue.sql)
+    - [Revenue trend mart](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/marts/mart_revenue_trend_monthly.sql)
+    - [Revenue KPI mart](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/marts/mart_revenue_story_kpis.sql)
+    - [Product price trend mart](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/marts/mart_product_price_trend_monthly.sql)
+    - [Revenue forecast notebook](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/notebooks/monthly_revenue_forecast.ipynb)
