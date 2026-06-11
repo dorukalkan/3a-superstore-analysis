@@ -175,7 +175,7 @@ author: Doruk Alkan
     - [Sipariş gelir modeli](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/intermediate/int_order_revenue.sql)
     - [Ürün fiyatlama modeli](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/intermediate/int_item_month_pricing.sql)
     - [Aylık gelir fact modeli](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/marts/fct_monthly_revenue.sql)
-    - [Gelir trendi mart'ı]'(https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/marts/mart_revenue_trend_monthly.sql)
+    - [Gelir trendi mart'ı](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/marts/mart_revenue_trend_monthly.sql)
     - [Gelir KPI mart'ı](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/marts/mart_revenue_story_kpis.sql)
     - [Ürün fiyat trendi mart'ı](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/superstore/models/marts/mart_product_price_trend_monthly.sql)
     - [Gelir tahmini notebook'u](https://github.com/dorukalkan/3a-superstore-analysis/blob/main/notebooks/monthly_revenue_forecast.ipynb)  
